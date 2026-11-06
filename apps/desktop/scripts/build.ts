@@ -78,11 +78,11 @@ if (isWindows) {
   const assemblyInfo = resolve(protocolDir, "assemblyInfo.cs");
   writeAtomicSync(assemblyInfo, [
     "using System.Reflection;",
-    '[assembly: AssemblyTitle("Toonflow")]',
-    '[assembly: AssemblyProduct("Toonflow")]',
-    '[assembly: AssemblyCompany("HBAI-Ltd")]',
-    '[assembly: AssemblyDescription("Toonflow desktop component")]',
-    '[assembly: AssemblyCopyright("Copyright (c) HBAI-Ltd")]',
+    '[assembly: AssemblyTitle("DramaAI")]',
+    '[assembly: AssemblyProduct("DramaAI")]',
+    '[assembly: AssemblyCompany("DramaAI")]',
+    '[assembly: AssemblyDescription("DramaAI desktop component")]',
+    '[assembly: AssemblyCopyright("Copyright (c) DramaAI")]',
     `[assembly: AssemblyVersion("${version}.0")]`,
     `[assembly: AssemblyFileVersion("${version}.0")]`,
     `[assembly: AssemblyInformationalVersion("${version}")]`,
@@ -122,10 +122,17 @@ await $`${process.execPath} run build`.cwd(resolve(projectDir, "packages/mcp"));
 const agentDirectory = dirname(realpathSync(Bun.resolveSync("@earendil-works/pi-coding-agent", resolve(projectDir, "apps/server"))));
 const photonDirectory = dirname(Bun.resolveSync("@silvia-odwyer/photon-node", agentDirectory));
 const photonOutput = resolve(projectDir, "build/desktop/photon");
-rmSync(photonOutput, { recursive: true, force: true });
-cpSync(photonDirectory, photonOutput, { recursive: true });
-await copyDocumentPackages(resolve(projectDir, "build/desktop/node_modules"));
-await copySandboxPackages(resolve(projectDir, "build/desktop/node_modules"));
+if (mode !== "dev" || !existsSync(resolve(photonOutput, "package.json"))) {
+  rmSync(photonOutput, { recursive: true, force: true });
+  cpSync(photonDirectory, photonOutput, { recursive: true });
+}
+const desktopNodeModules = resolve(projectDir, "build/desktop/node_modules");
+if (mode !== "dev" || !existsSync(resolve(desktopNodeModules, "@firecrawl/anydoc/package.json"))) {
+  await copyDocumentPackages(desktopNodeModules);
+}
+if (mode !== "dev" || !existsSync(resolve(desktopNodeModules, "just-bash/package.json"))) {
+  await copySandboxPackages(desktopNodeModules);
+}
 const cli = resolve(projectDir, "apps/desktop/node_modules/electrobun/bin/electrobun.cjs");
 if (isMac && mode !== "dev") {
   // ACT: 外置 Bun 的 macOS Bundle 身份尚待实机验证，正式构建继续内置；显式开启仅用于验证精简安装包。
@@ -134,7 +141,49 @@ if (isMac && mode !== "dev") {
 // ACT: SDK 调用 Windows PowerShell 压缩产物，避免继承 PowerShell 7 的同名模块。
 const buildEnv = { ...process.env };
 if (isWindows && mode !== "dev") buildEnv.PSModulePath = resolve(process.env.WINDIR!, "System32/WindowsPowerShell/v1.0/Modules");
-await $`${process.execPath} ${cli} ${mode === "dev" ? "dev" : "build"} ${mode === "dev" ? [] : ["--env=stable"]}`.cwd(projectDir).env(buildEnv);
+const devAppDir = resolve(projectDir, `build/desktop/app/dev-win-${process.arch}/${desktopConfig.app.name}-dev`);
+const devBunBin = resolve(devAppDir, "bin/bun.exe");
+if (isWindows && mode === "dev" && existsSync(devBunBin)) {
+  console.log("正在同步桌面端资源并启动 DramaAI...");
+  const appResourcesDir = resolve(devAppDir, "Resources/app");
+  const mainBuild = await Bun.build({
+    entrypoints: [resolve(projectDir, desktopConfig.build.bun.entrypoint)],
+    outdir: resolve(appResourcesDir, "bun"),
+    naming: "index.js",
+    target: "bun",
+    minify: true,
+    external: [...(desktopConfig.build.bun.external ?? []), "bun", "bun:ffi"],
+  });
+  if (!mainBuild.success) throw new AggregateError(mainBuild.logs, "桌面主进程构建失败。");
+  const alwaysSyncKeys = new Set([
+    "build/web",
+    "build/mcp",
+    "build/tools",
+    "build/nodes",
+    "build/ext",
+    "build/desktop/ffmpeg/ffmpegWorker.js",
+    "build/desktop/sandbox/sandboxProcess.js",
+  ]);
+  for (const [srcRel, destRel] of Object.entries(desktopConfig.build.copy)) {
+    const srcPath = resolve(projectDir, srcRel);
+    const destPath = resolve(appResourcesDir, destRel);
+    if (!existsSync(srcPath)) continue;
+    if (alwaysSyncKeys.has(srcRel) || !existsSync(destPath)) {
+      mkdirSync(dirname(destPath), { recursive: true });
+      cpSync(srcPath, destPath, { recursive: true });
+    }
+  }
+  const appProc = Bun.spawn([devBunBin, "../Resources/main.js"], {
+    cwd: resolve(devAppDir, "bin"),
+    env: buildEnv,
+    stdin: "ignore",
+    stdout: "inherit",
+    stderr: "inherit",
+  });
+  process.exit(await appProc.exited);
+} else {
+  await $`${process.execPath} ${cli} ${mode === "dev" ? "dev" : "build"} ${mode === "dev" ? [] : ["--env=stable"]}`.cwd(projectDir).env(buildEnv);
+}
 if (mode === "package") {
   await $`${process.execPath} ${resolve(import.meta.dir, isMac ? "packageMac.ts" : isWindows ? "packageWindows.ts" : "packageLinux.ts")}`.cwd(projectDir).env(buildEnv);
 }

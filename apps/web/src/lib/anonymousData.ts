@@ -142,16 +142,9 @@ export function registerAnonymousData() {
       events,
       agent,
     };
-    void axios
-      .post("https://api.toonflow.net/web/telemetry/report", data, {
-        adapter: "fetch",
-        fetchOptions: { keepalive: true, referrerPolicy: "no-referrer" },
-        withCredentials: false,
-        withXSRFToken: false,
-        timeout: 10_000,
-        signal: controller.signal,
-      })
-      .catch(() => {});
+    // ACT: DramaAI 商业版彻底切断向官方服务器发送遥测数据，仅保留本地统计结构签名以兼容调用。
+    void axios;
+    void data;
   }
 
   function stop() {

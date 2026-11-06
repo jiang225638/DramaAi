@@ -6,15 +6,15 @@ XPStyle on
 ManifestDPIAware true
 SetFont "Microsoft YaHei UI" 9
 
-!define appName "Toonflow"
+!define appName "DramaAI"
 VIProductVersion "${appVersion}.0"
 VIFileVersion "${appVersion}.0"
 VIAddVersionKey /LANG=2052 "ProductName" "${appName}"
-VIAddVersionKey /LANG=2052 "CompanyName" "HBAI-Ltd"
-VIAddVersionKey /LANG=2052 "FileDescription" "Toonflow 安装程序"
+VIAddVersionKey /LANG=2052 "CompanyName" "DramaAI"
+VIAddVersionKey /LANG=2052 "FileDescription" "DramaAI 安装程序"
 VIAddVersionKey /LANG=2052 "FileVersion" "${appVersion}.0"
 VIAddVersionKey /LANG=2052 "ProductVersion" "${appVersion}"
-VIAddVersionKey /LANG=2052 "LegalCopyright" "Copyright (c) HBAI-Ltd"
+VIAddVersionKey /LANG=2052 "LegalCopyright" "Copyright (c) DramaAI"
 ; ACT: 编译时签署内嵌卸载器；不运行安装包来提取卸载器，签名失败即停止。
 !ifdef windowsSignCommand
   !uninstfinalize '${windowsSignCommand} "%1"' = 0
@@ -39,11 +39,11 @@ ShowInstDetails show
 !include MUI2.nsh
 !define MUI_ICON "${appIcon}"
 !define MUI_UNICON "${appIcon}"
-!define MUI_DIRECTORYPAGE_TEXT_TOP "请选择 Toonflow 的安装目录。"
+!define MUI_DIRECTORYPAGE_TEXT_TOP "请选择 DramaAI 的安装目录。"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !define MUI_FINISHPAGE_RUN "$INSTDIR\app\Resources\app\startupLauncher.exe"
-!define MUI_FINISHPAGE_RUN_TEXT "立即打开 Toonflow"
+!define MUI_FINISHPAGE_RUN_TEXT "立即打开 DramaAI"
 !define MUI_PAGE_CUSTOMFUNCTION_SHOW showFinishPage
 !insertmacro MUI_PAGE_FINISH
 UninstPage custom un.showUninstallOptions un.leaveUninstallOptions

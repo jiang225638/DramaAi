@@ -112,7 +112,7 @@ async function start() {
     if (process.platform === "darwin") {
       // ACT: WKWebView 的 Command 编辑快捷键由原生菜单角色交给当前响应者处理。
       ApplicationMenu.setApplicationMenu([
-        { label: "Toonflow", submenu: [
+        { label: "DramaAI", submenu: [
           { role: "about" },
           { type: "separator" },
           { role: "hide" },
@@ -188,7 +188,7 @@ async function start() {
     const width = Math.min(1280, workArea.width - 64);
     const height = Math.min(960, workArea.height - 64);
     const mainWindow = new BrowserWindow({
-      title: "Toonflow",
+      title: "DramaAI",
       url: getMainWindowUrl(connection.port, connection.remote, connection.hostMode),
       navigationRules: JSON.stringify(getNavigationRules(connection.port)),
       // ACT: Windows SDK 未接管普通新窗口请求，在创建 WebView 弹窗前交给宿主。
@@ -272,7 +272,7 @@ async function start() {
         // ACT: 页面未就绪或加载失败时保留原生后备，正常界面使用应用内弹窗。
         const result = await Utils.showMessageBox({
           type: "warning",
-          title: t`退出 Toonflow`,
+          title: t`退出 DramaAI`,
           message: t`退出后，正在运行的任务将被中断。确定要退出吗？`,
           buttons: [t`取消`, t`退出`],
           defaultId: 0,
@@ -322,7 +322,7 @@ async function start() {
         const creationWidth = Math.min(1100, workArea.width - 64);
         const creationHeight = Math.min(800, workArea.height - 64);
         const opened = creationWindow = new BrowserWindow({
-          title: "Toonflow",
+          title: "DramaAI",
           url: "http://127.0.0.1:10888/#/home",
           navigationRules: JSON.stringify(getNavigationRules(10888)),
           sandbox: true,

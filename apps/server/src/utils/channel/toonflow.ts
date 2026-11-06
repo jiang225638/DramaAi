@@ -804,11 +804,8 @@ export class Toonflow implements Channel {
     return download;
   }
 
-  async getSponsorList(options?: RequestOptions): Promise<Sponsor[]> {
-    const sponsors = await this.request<Sponsor[]>({ method: "POST", path: "/web/sponsor/getSponsorList", data: null, signal: options?.signal });
-    if (!Array.isArray(sponsors) || sponsors.some(item => !item || !Number.isSafeInteger(item.id) || item.id < 1
-      || typeof item.name !== "string" || typeof item.logoUrl !== "string" || typeof item.readme !== "string")) fail("赞助商响应格式不正确", 502);
-    return sponsors;
+  async getSponsorList(_options?: RequestOptions): Promise<Sponsor[]> {
+    return [];
   }
 
   async getExploreUploadSignature(params: ExploreUploadSignatureParams, options: AuthenticatedOptions): Promise<ExploreUploadSignature> {
@@ -831,31 +828,8 @@ export class Toonflow implements Channel {
     return data;
   }
 
-  async getAdvertisements(options?: RequestOptions): Promise<HomeAdvertisements> {
-    const data = await this.request<{ banner: unknown; banners?: unknown; bannerMode?: unknown; bannerInterval?: unknown; sidebar: unknown }>({
-      method: "POST", path: "/web/toonflow/home/getAdvertisements", signal: options?.signal,
-    });
-    if (!data || typeof data !== "object" || Array.isArray(data)) fail("首页广告响应格式不正确", 502);
-    const now = Date.now();
-    function parseAdvertisement(value: unknown, requireImage = false): HomeAdvertisement | null {
-      const parsed = homeAdvertisement.safeParse(value);
-      if (!parsed.success) return null;
-      const advertisement = parsed.data;
-      if (advertisement.endsAt && advertisement.endsAt <= now) return null;
-      if ((requireImage || advertisement.appearance?.mode === "image") && !advertisement.imageUrl) return null;
-      return advertisement;
-    }
-    // ACT: 新接口的空数组表示明确清空；只有旧接口缺少 banners 时才回退单条。
-    if (data.banners !== undefined && !Array.isArray(data.banners)) fail("顶部横幅响应格式不正确", 502);
-    const banners = (Array.isArray(data.banners) ? data.banners : [data.banner])
-      .slice(0, 10).map(item => parseAdvertisement(item)).filter((item): item is HomeAdvertisement => item !== null);
-    const sidebar = Array.isArray(data.sidebar) ? data.sidebar : [data.sidebar];
-    return {
-      banner: banners[0] ?? null,
-      banners,
-      bannerMode: data.bannerMode === "stack" ? "stack" : "carousel",
-      bannerInterval: typeof data.bannerInterval === "number" && Number.isInteger(data.bannerInterval) && data.bannerInterval >= 2 && data.bannerInterval <= 60 ? data.bannerInterval : 5,
-      sidebar: sidebar.slice(0, 10).map(item => parseAdvertisement(item, true)).filter((item): item is HomeAdvertisement => item !== null),
-    };
+  async getAdvertisements(_options?: RequestOptions): Promise<HomeAdvertisements> {
+    void homeAdvertisement;
+    return { banner: null, banners: [], bannerMode: "carousel", bannerInterval: 5, sidebar: [] };
   }
 }

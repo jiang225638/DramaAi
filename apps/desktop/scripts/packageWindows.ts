@@ -14,7 +14,7 @@ const projectDir = realpathSync(resolve(import.meta.dirname, "../../.."));
 process.chdir(projectDir);
 const nsisDir = resolve("build/desktop/nsis");
 const artifactDir = resolve(desktopConfig.build.artifactFolder);
-const installerName = `toonflow-${desktopConfig.app.version}${process.arch === "arm64" ? "-win-arm64" : ""}-Setup.exe`;
+const installerName = `${desktopConfig.app.name}-${desktopConfig.app.version}${process.arch === "arm64" ? "-win-arm64" : ""}-Setup.exe`;
 const outputFile = join(artifactDir, installerName);
 const installerDir = resolve("apps/desktop/installer");
 const appIcon = resolve("packages/assets/logo.ico");
