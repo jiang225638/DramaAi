@@ -35,9 +35,12 @@ watch([visible, () => props.directory], async ([visible, directory], _previous, 
   let release = () => {};
   onCleanup(() => { controller.abort(); release(); });
   const files = useWorkspaceFiles(directory);
-  const directories = ["assets"];
   try {
-    // ACT: 按目录层级和文件名查找首图，找到即停止；封面仍读取原图，大图优化可改用服务端缩略图。
+    // ACT: 先确认工作区根目录下存在 assets 文件夹再递归查找首图，避免新项目尚未创建 assets 时触发 404 ENOENT。
+    const { entries: rootEntries } = await files.list("", controller.signal).catch(() => ({ entries: [] }));
+    const assetsEntry = rootEntries.find(entry => entry.type === "directory" && entry.name.toLowerCase() === "assets");
+    if (!assetsEntry || controller.signal.aborted) return;
+    const directories = [assetsEntry.path];
     for (let index = 0; index < directories.length && !controller.signal.aborted; index++) {
       const { entries } = await files.list(directories[index]!, controller.signal).catch(() => ({ entries: [] }));
       if (controller.signal.aborted) return;

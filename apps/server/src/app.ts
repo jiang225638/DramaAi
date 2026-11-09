@@ -138,8 +138,8 @@ export async function createApp({
   // 错误处理
   app.use((err: Error & { status?: number }, request: Request, response: Response, next: NextFunction) => {
     if (response.headersSent) return next(err);
-    console.error(err);
     const body = errorFromCause(err);
+    if (body.code >= 500) console.error(err);
     response.status(body.code).json(body);
   });
 
