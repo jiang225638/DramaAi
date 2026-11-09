@@ -26,7 +26,7 @@
       </nav>
       <div class="sidebarFooter">
         <homeAdvertisementCarousel class="sidebarPromotion" :advertisements="advertisements.sidebar" @activate="activateAdvertisement" />
-        <button v-if="!publicWeb" class="sidebarItem deviceButton" :class="{ connected: deviceHubEnabled || mobileConnection.online === true }" type="button" :aria-label="mobileConnectionLabel" :title="mobileConnectionLabel" @click="mobileConnectVisible = true">
+        <button v-if="false && !publicWeb" class="sidebarItem deviceButton" :class="{ connected: deviceHubEnabled || mobileConnection.online === true }" type="button" :aria-label="mobileConnectionLabel" :title="mobileConnectionLabel" @click="mobileConnectVisible = true">
           <span class="sidebarIcon">
             <component :is="deviceHubEnabled || mobileConnection.mode === 'remote' ? IconDeviceDesktop : IconQrcode" :size="18" aria-hidden="true" />
             <span v-if="deviceHubEnabled || mobileConnection.online === true" class="connectionDot" />
@@ -112,7 +112,7 @@
     </el-scrollbar>
     <assetLibraryDialog v-if="currentUser?.role !== 'user'" v-model="assetsVisible" />
     <settings ref="settingsDialog" v-model="settingsVisible" />
-    <mobileConnect v-if="!publicWeb" v-model="mobileConnectVisible" />
+    <mobileConnect v-if="false && !publicWeb" v-model="mobileConnectVisible" />
     <workspacePicker ref="relocationPicker" hideTrigger />
   </div>
 </template>

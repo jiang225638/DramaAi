@@ -91,6 +91,8 @@ async function start() {
   let desktopConnection: Awaited<ReturnType<typeof import("./connection").default>> | undefined;
   let creationWindow: BrowserWindow | undefined;
   let isClosing = false;
+  let updateWindowTheme: ((dark: boolean) => void) | undefined;
+  let currentIsDark = true;
   function closeCreationWindow() {
     const current = creationWindow;
     creationWindow = undefined;
@@ -107,6 +109,8 @@ async function start() {
       if (error.code !== "ENOENT") console.error("读取启动设置失败，使用默认启动动画：", error);
       return null;
     });
+    const initialTheme = startupSettings?.settings?.ui?.theme;
+    currentIsDark = initialTheme === "light" ? false : true;
     setLocaleFallback(() => normalizeLocale(startupSettings?.settings?.ui?.language)
       ?? detectLocale([Intl.DateTimeFormat().resolvedOptions().locale]));
     if (process.platform === "darwin") {
@@ -189,6 +193,7 @@ async function start() {
     const height = Math.min(960, workArea.height - 64);
     const mainWindow = new BrowserWindow({
       title: "DramaAI",
+      ...(process.platform === "win32" ? { titleBarStyle: "hiddenInset" as const } : {}),
       url: getMainWindowUrl(connection.port, connection.remote, connection.hostMode),
       navigationRules: JSON.stringify(getNavigationRules(connection.port)),
       // ACT: Windows SDK 未接管普通新窗口请求，在创建 WebView 弹窗前交给宿主。
@@ -354,6 +359,7 @@ async function start() {
           },
         });
         opened.on("close", () => { if (creationWindow === opened) creationWindow = undefined; });
+        if (updateWindowTheme) updateWindowTheme(currentIsDark);
         return;
       }
       if (process.platform === "win32" && target.origin === current.origin && target.pathname === current.pathname && target.search === current.search) {
@@ -381,10 +387,40 @@ async function start() {
     }
     // SDK 的全局事件不带 WebView ID，使用事件名后缀限定主窗口。
     Electrobun.events.on(`new-window-open-${mainWindow.webview.id}`, (event: { data: { detail: unknown } }) => openLink(event.data.detail));
+    const sendWindowState = () => {
+      try {
+        const maximized = Boolean(mainWindow.isMaximized?.());
+        mainWindow.webview.executeJavascript(
+          `window.dispatchEvent(new CustomEvent("dramaai:windowState", { detail: { maximized: ${maximized} } }));`
+        );
+      } catch {}
+    };
+    mainWindow.on("resize", sendWindowState);
+
     Electrobun.events.on(`host-message-${mainWindow.webview.id}`, (event: { data: { detail: unknown } }) => {
       const detail = event.data.detail;
       if (!detail || typeof detail !== "object" || !("type" in detail)) return;
       if (detail.type === "openExternal") openLink(detail);
+      if (detail.type === "themeChange" && "dark" in detail && typeof detail.dark === "boolean") {
+        updateWindowTheme?.(detail.dark);
+      }
+      if (detail.type === "windowMinimize") {
+        mainWindow.minimize();
+      }
+      if (detail.type === "windowMaximize") {
+        if (mainWindow.isMaximized()) {
+          mainWindow.unmaximize();
+        } else {
+          mainWindow.maximize();
+        }
+        sendWindowState();
+      }
+      if (detail.type === "windowClose") {
+        mainWindow.requestClose();
+      }
+      if (detail.type === "queryWindowState") {
+        sendWindowState();
+      }
       if (detail.type === "quitReady" && "ready" in detail && typeof detail.ready === "boolean") {
         quitReady = detail.ready;
         if (!quitReady) pendingQuit?.resolve(false);
@@ -496,10 +532,26 @@ async function start() {
         GetSystemMetricsForDpi: { args: ["i32", "u32"], returns: "i32" },
         DestroyIcon: { args: ["ptr"], returns: "i32" },
         GetAsyncKeyState: { args: ["i32"], returns: "i16" },
+        SetWindowPos: { args: ["ptr", "ptr", "i32", "i32", "i32", "i32", "u32"], returns: "i32" },
+        GetWindowLongW: { args: ["ptr", "i32"], returns: "i32" },
+        SetWindowLongW: { args: ["ptr", "i32", "i32"], returns: "i32" },
+      });
+      const dwmapi = dlopen("dwmapi.dll", {
+        DwmSetWindowAttribute: { args: ["ptr", "u32", "ptr", "u32"], returns: "i32" },
       });
       const native = user32.symbols;
+      const dwmNative = dwmapi.symbols;
       isControlHeld = () => Boolean(native.GetAsyncKeyState(0x11) & 0x8000);
       const window = mainWindow.ptr;
+
+      // 补充 WS_MINIMIZEBOX | WS_MAXIMIZEBOX（不含 WS_SYSMENU），支持任务栏点击最小化与系统贴靠，且不绘制原生右上角按钮
+      const GWL_STYLE = -16;
+      const WS_MINMAX = 0x00030000;
+      const currentStyle = native.GetWindowLongW(window, GWL_STYLE);
+      if ((currentStyle & WS_MINMAX) !== WS_MINMAX) {
+        native.SetWindowLongW(window, GWL_STYLE, currentStyle | WS_MINMAX);
+      }
+
       const dpi = native.GetDpiForWindow(window);
       const iconPath = Buffer.from(`${resolve(PATHS.RESOURCES_FOLDER, "app.ico")}\0`, "utf16le");
       // ICON_SMALL / ICON_BIG，各自使用当前窗口 DPI 对应的系统尺寸。
@@ -510,6 +562,7 @@ async function start() {
         clearTimeout(navigationTimer);
         for (const icon of icons) if (icon) native.DestroyIcon(icon);
         user32.close();
+        dwmapi.close();
       };
       if (icons.some((icon) => !icon)) {
         closeIcons();
@@ -517,6 +570,30 @@ async function start() {
       }
       icons.forEach((icon, type) => native.SendMessageW(window, 0x80, type, icon));
       mainWindow.on("close", closeIcons);
+
+      const applyThemeToHwnd = (hwnd: unknown, isDark: boolean) => {
+        if (!hwnd) return;
+        const darkVal = new Uint32Array([isDark ? 1 : 0]);
+        const hr = dwmNative.DwmSetWindowAttribute(hwnd as any, 20, ptr(darkVal), 4);
+        if (hr !== 0) {
+          dwmNative.DwmSetWindowAttribute(hwnd as any, 19, ptr(darkVal), 4);
+        }
+        const captionColor = new Uint32Array([isDark ? 0x001D1C1C : 0x00F8F7F7]);
+        dwmNative.DwmSetWindowAttribute(hwnd as any, 35, ptr(captionColor), 4);
+        const textColor = new Uint32Array([isDark ? 0x00F3EAE5 : 0x00333130]);
+        dwmNative.DwmSetWindowAttribute(hwnd as any, 36, ptr(textColor), 4);
+        const borderColor = new Uint32Array([isDark ? 0x002E2E2E : 0x00E8E6E5]);
+        dwmNative.DwmSetWindowAttribute(hwnd as any, 34, ptr(borderColor), 4);
+        native.SetWindowPos(hwnd as any, null, 0, 0, 0, 0, 0x0037);
+      };
+
+      updateWindowTheme = (dark: boolean) => {
+        currentIsDark = dark;
+        applyThemeToHwnd(mainWindow.ptr, dark);
+        if (creationWindow?.ptr) applyThemeToHwnd(creationWindow.ptr, dark);
+      };
+
+      applyThemeToHwnd(window, currentIsDark);
     }
     mainWindow.on("close", () => {
       isClosing = true;

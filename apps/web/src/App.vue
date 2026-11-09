@@ -8,6 +8,7 @@
       </router-view>
       <loadingPage v-model:visible="workspaceStore.projectLoadingVisible" v-model:drawn="workspaceStore.projectLoadingDrawn" :active="workspaceStore.projectLoading" />
       <ffmpegRequired v-if="currentUser?.role !== 'user'" />
+      <desktopTitlebar v-if="isDesktop && isWindows" />
       <desktopQuit v-if="actualPlatform.isDesktop" />
       <updateBox
         v-if="updateBoxBuild && !installFailure"
@@ -56,7 +57,7 @@ import { locale } from "@toonflow/i18n/vue";
 import type { updateSnapshot } from "@toonflow/server/desktop";
 import { chatLocale } from "@/lib/i18n";
 import { registerAppearance } from "@/lib/appearance";
-import { actualPlatform, isMobile } from "@/lib/platform";
+import { actualPlatform, isDesktop, isMobile, isWindows } from "@/lib/platform";
 import { saveSettings, settings, uiSettings } from "@/stores/settings";
 import { desktopUpdateSnapshot, stopDesktopUpdateObservation } from "@/stores/desktopUpdate";
 import { useWorkspaceStore } from "@/stores/workspace";
@@ -65,6 +66,7 @@ import loadingPage from "@/components/loadingPage.vue";
 import { useMcpControl } from "@/lib/mcpControl";
 import ffmpegRequired from "@/components/settings/ffmpegRequired.vue";
 import desktopQuit from "@/components/desktopQuit.vue";
+import desktopTitlebar from "@/components/desktopTitlebar.vue";
 import updateBox from "@/components/updateBox.vue";
 import "element-plus/theme-chalk/dark/css-vars.css";
 

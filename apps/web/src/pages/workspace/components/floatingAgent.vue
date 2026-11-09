@@ -210,6 +210,10 @@ onBeforeUnmount(() => {
     border-radius: 0;
     background: var(--el-bg-color-overlay);
     box-shadow: none;
+
+    :deep(.agentMenu) {
+      padding-top: calc(12px + var(--desktopTitlebarHeight, 0px));
+    }
   }
 
   :deep(.agent) {

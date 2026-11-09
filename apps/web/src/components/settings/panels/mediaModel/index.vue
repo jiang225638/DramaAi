@@ -1,7 +1,6 @@
 <template>
   <div class="providerList">
     <div class="itemList">
-      <toonflowProviderCard scope="media" :provider="providers.find(item => item.id === 'toonflow')" />
       <el-card v-for="item in visibleProviders" :key="item.fileName" class="providerItem" shadow="never">
         <div class="providerHeader">
           <div v-if="item.icon" class="providerMark" aria-hidden="true">
@@ -49,7 +48,6 @@ import { IconPlus, IconSettings, IconEdit, IconTrash, IconDownload, IconCode } f
 import type { MediaProvider } from "@toonflow/provider-web/types";
 import { saveSettings } from "@/stores/settings";
 import { invalidateNodeModels } from "@toonflow/nodes-scaffold/nodeAi";
-import toonflowProviderCard from "../../toonflowProviderCard.vue";
 
 defineProps<{ visible?: boolean }>();
 const mediaProviderDialog = shallowRef<Component>();

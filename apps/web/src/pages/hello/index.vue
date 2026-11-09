@@ -32,7 +32,7 @@
       </div>
 
       <footer class="pageFooter">
-        <el-button class="deviceLink" size="small" :icon="IconDevices" @click="mobileConnectVisible = true">{{ mobileConnectionLabel }}</el-button>
+        <el-button v-if="false" class="deviceLink" size="small" :icon="IconDevices" @click="mobileConnectVisible = true">{{ mobileConnectionLabel }}</el-button>
         <p>© {{ new Date().getFullYear() }} DramaAI · 保留所有权利。</p>
       </footer>
     </section>
@@ -43,7 +43,7 @@
         <span class="artName">DramaAI</span>
       </div>
     </div>
-    <mobileConnect v-model="mobileConnectVisible" />
+    <mobileConnect v-if="false" v-model="mobileConnectVisible" />
   </main>
 </template>
 
@@ -254,7 +254,7 @@ async function completeSetup() {
     display: flex;
     align-items: flex-start;
     justify-content: flex-end;
-    padding: 28px;
+    padding: calc(28px + var(--desktopTitlebarHeight, 0px)) 28px 28px;
     border-radius: calc(var(--ui-radius) * 1.125);
     overflow: hidden;
     background: radial-gradient(ellipse at 76% 82%, #f3dcb1 0%, transparent 46%), radial-gradient(ellipse at 25% 52%, #667ab5 0%, transparent 52%),
