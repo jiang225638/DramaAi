@@ -29,7 +29,7 @@ if (typeof archiveName !== "string" || !archiveName.startsWith(`${prefix}-`)
 
 await mkdir(stagingParent, { recursive: true });
 const stagingDir = await mkdtemp(join(stagingParent, "payload"));
-const outputName = `toonflow-${version}-linux-${process.arch}.deb`;
+const outputName = `${desktopConfig.app.name}-${version}-linux-${process.arch}.deb`;
 try {
   const packageRoot = join(stagingDir, "package");
   const appRoot = join(packageRoot, "opt/toonflow");

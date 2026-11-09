@@ -1,5 +1,5 @@
-name: Release Toonflow
-run-name: Release Toonflow ${{ github.event_name == 'push' && github.ref_name || (startsWith(inputs.version, 'v') && inputs.version || format('v{0}', inputs.version)) }}
+name: Release DramaAI
+run-name: Release DramaAI ${{ github.event_name == 'push' && github.ref_name || (startsWith(inputs.version, 'v') && inputs.version || format('v{0}', inputs.version)) }}
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: toonflow-release
+  group: dramaai-release
   cancel-in-progress: false
 
 jobs:
@@ -74,7 +74,7 @@ jobs:
       - name: 下载各平台产物
         uses: actions/download-artifact@v8
         with:
-          pattern: toonflow-${{ needs.build.outputs.version }}-*
+          pattern: DramaAI-${{ needs.build.outputs.version }}-*
           path: artifacts
           merge-multiple: true
       - name: 生成下载说明
@@ -91,13 +91,13 @@ jobs:
             if (names.length !== 1) throw new Error(`${label} 安装包数量应为 1，实际为 ${names.length}`);
             return names[0];
           };
-          const windows = findInstaller("Windows x64", name => name === `toonflow-${version}-Setup.exe`);
-          const windowsArm = findInstaller("Windows ARM64", name => name === `toonflow-${version}-win-arm64-Setup.exe`);
-          const macArm = findInstaller("macOS ARM64", name => name === `toonflow-${version}-macos-arm64.dmg`);
-          const macIntel = findInstaller("macOS x64", name => name === `toonflow-${version}-macos-x64.dmg`);
-          const linux = findInstaller("Linux x64", name => name === `toonflow-${version}-linux-x64.deb`);
-          const linuxArm = findInstaller("Linux ARM64", name => name === `toonflow-${version}-linux-arm64.deb`);
-          const android = findInstaller("Android ARM64", name => name === `toonflow-${version}-android-arm64.apk`);
+          const windows = findInstaller("Windows x64", name => name === `DramaAI-${version}-Setup.exe`);
+          const windowsArm = findInstaller("Windows ARM64", name => name === `DramaAI-${version}-win-arm64-Setup.exe`);
+          const macArm = findInstaller("macOS ARM64", name => name === `DramaAI-${version}-macos-arm64.dmg`);
+          const macIntel = findInstaller("macOS x64", name => name === `DramaAI-${version}-macos-x64.dmg`);
+          const linux = findInstaller("Linux x64", name => name === `DramaAI-${version}-linux-x64.deb`);
+          const linuxArm = findInstaller("Linux ARM64", name => name === `DramaAI-${version}-linux-arm64.deb`);
+          const android = findInstaller("Android ARM64", name => name === `DramaAI-${version}-android-arm64.apk`);
           const baseUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/releases/download/v${version}`;
           const download = name => `${baseUrl}/${encodeURIComponent(name)}`;
           writeFileSync("releaseBody.md", [
@@ -120,12 +120,9 @@ jobs:
             "## 🚀 安装说明",
             "",
             "- 💻 **Windows**：双击下载的安装包，按提示完成安装。ARM64 需要 .NET Framework 4.8.1，较新的 Windows 11 已内置。",
-            "- 🍎 **Mac（macOS 14 及以上）**：打开下载的 `.dmg` 镜像，将 `toonflow.app` 拖入“应用程序”，复制完成后再从“应用程序”打开。",
-            "- 🐧 **Linux（Debian / Ubuntu）**：选择对应架构的 DEB，在下载目录执行 `sudo apt install ./toonflow-版本号-linux-架构.deb`，安装后从应用菜单打开。",
+            "- 🍎 **Mac（macOS 14 及以上）**：打开下载的 `.dmg` 镜像，将 `DramaAI.app` 拖入“应用程序”，复制完成后再从“应用程序”打开。",
+            "- 🐧 **Linux（Debian / Ubuntu）**：选择对应架构的 DEB，在下载目录执行 `sudo apt install ./DramaAI-版本号-linux-架构.deb`，安装后从应用菜单打开。",
             "- 📱 **Android**：在手机上打开 APK，按系统提示允许此来源安装应用。后续版本可直接覆盖安装。",
-            "",
-            "两种 Mac 应用与 DMG 镜像均使用 Developer ID Application 签名，并完成 Apple 公证。首次打开时，macOS 仍可能提示确认打开从互联网下载的应用。",
-            "旧版 Intel Mac 客户端首次迁移到统一 SDK 版本时，请下载完整 DMG 覆盖安装；旧版增量更新不能直接迁移。安装前请退出应用并备份原数据目录。",
             "",
             "---",
             "",
@@ -136,16 +133,20 @@ jobs:
         with:
           tag_name: v${{ needs.build.outputs.version }}
           target_commitish: ${{ needs.build.outputs.commit }}
-          name: Toonflow ${{ needs.build.outputs.version }}
+          name: DramaAI ${{ needs.build.outputs.version }}
           make_latest: true
           body_path: releaseBody.md
           generate_release_notes: true
           fail_on_unmatched_files: true
           files: artifacts/*
       - uses: oven-sh/setup-bun@v2
+        if: env.uploadKey != ''
+        env:
+          uploadKey: ${{ secrets.TFROUTER_UPLOAD_KEY }}
         with:
           bun-version: 1.4.3
       - name: 上传到更新托管网站
+        if: env.uploadKey != ''
         timeout-minutes: 60
         env:
           releaseVersion: ${{ needs.build.outputs.version }}
@@ -177,7 +178,7 @@ jobs:
 
           // ACT: Android APK 随 GitHub Release 发布，现有更新托管接口仅登记桌面版本。
           const names = readdirSync("artifacts", { withFileTypes: true }).filter(entry => entry.isFile()).map(entry => entry.name)
-            .filter(name => name !== `toonflow-${version}-android-arm64.apk`);
+            .filter(name => name !== `DramaAI-${version}-android-arm64.apk`);
           const targets = [
             { platform: "win", arch: "x64" },
             { platform: "win", arch: "arm64" },
@@ -189,9 +190,9 @@ jobs:
           const plans = await Promise.all(targets.map(async target => {
             const prefix = `stable-${target.platform}-${target.arch}-`;
             const installers = names.filter(name => target.platform === "win"
-              ? name === (target.arch === "x64" ? `toonflow-${version}-Setup.exe` : `toonflow-${version}-win-arm64-Setup.exe`)
-              : target.platform === "linux" ? name === `toonflow-${version}-linux-${target.arch}.deb`
-              : name === `toonflow-${version}-macos-${target.arch}.dmg`);
+              ? name === (target.arch === "x64" ? `DramaAI-${version}-Setup.exe` : `DramaAI-${version}-win-arm64-Setup.exe`)
+              : target.platform === "linux" ? name === `DramaAI-${version}-linux-${target.arch}.deb`
+              : name === `DramaAI-${version}-macos-${target.arch}.dmg`);
             if (installers.length !== 1) throw new Error(`${prefix}安装包数量应为 1，实际为 ${installers.length}`);
             const manifestName = `${prefix}update.json`;
             if (!names.includes(manifestName)) throw new Error(`缺少更新清单：${manifestName}`);

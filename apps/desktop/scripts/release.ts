@@ -91,9 +91,10 @@ if (manifest.version !== version) {
   throw new Error("本次构建的更新 JSON 与请求版本不一致。");
 }
 const names: string[] = [manifest.artifact.file];
-if (isMac) names.push(`toonflow-${version}-macos-${process.arch}.dmg`);
-else if (platform === "linux") names.push(`toonflow-${version}-linux-${process.arch}.deb`);
-else names.push(`toonflow-${version}${process.arch === "arm64" ? "-win-arm64" : ""}-Setup.exe`);
+const appName = desktopConfig.app.name;
+if (isMac) names.push(`${appName}-${version}-macos-${process.arch}.dmg`);
+else if (platform === "linux") names.push(`${appName}-${version}-linux-${process.arch}.deb`);
+else names.push(`${appName}-${version}${process.arch === "arm64" ? "-win-arm64" : ""}-Setup.exe`);
 if (previousHash) names.push(`${prefix}-${previousHash}.patch`);
 for (const name of names) {
   if (!existsSync(join(artifactDir, name))) throw new Error(`构建产物缺失，未创建发布快照：${name}`);

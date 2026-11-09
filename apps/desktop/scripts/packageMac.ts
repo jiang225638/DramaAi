@@ -39,7 +39,7 @@ const stagingParent = resolve(projectDir, "build/desktop/dmg");
 mkdirSync(stagingParent, { recursive: true });
 const stagingDir = mkdtempSync(join(stagingParent, "payload"));
 const appName = `${desktopConfig.app.name.replace(/ /g, "")}.app`;
-const outputName = `toonflow-${version}-macos-${process.arch}.dmg`;
+const outputName = `${desktopConfig.app.name}-${version}-macos-${process.arch}.dmg`;
 try {
   const tarPath = join(stagingDir, "app.tar");
   await write(tarPath, Bun.zstdDecompressSync(await file(join(artifactDir, archiveName)).arrayBuffer()));
