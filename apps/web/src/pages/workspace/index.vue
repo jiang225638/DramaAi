@@ -59,7 +59,7 @@
                 <icon-search :size="18" aria-hidden="true" />
               </el-button>
             </el-tooltip>
-            <el-tooltip :showArrow="false" content="帮助" placement="top" :hideAfter="0" :enterable="false" :triggerKeys="[]" :disabled="helpVisible">
+            <el-tooltip v-if="false" :showArrow="false" content="帮助" placement="top" :hideAfter="0" :enterable="false" :triggerKeys="[]" :disabled="helpVisible">
               <span class="toolTrigger">
                 <el-popover v-model:visible="helpVisible" trigger="click" placement="top-end" :width="196">
                   <template #reference>
@@ -87,7 +87,7 @@
                       href="https://docs.qq.com/smartsheet/form/EmvmQBrmlPmr%2Fss_vsqk2v%2FvhiGzE?tab=ss_vsqk2v"
                       target="_blank"
                       rel="noopener noreferrer"
-                      title="Toonflow 需求/BUG反馈表"
+                      title="DramaAI 需求/BUG反馈表"
                       @click="helpVisible = false">
                       汇报 BUG
                     </el-button>
@@ -99,12 +99,12 @@
             </el-tooltip>
           </div>
         </el-card>
-        <el-tooltip v-if="!agentVisible" content="Toonflow Agent" placement="top" :showArrow="false" :hideAfter="0">
+        <el-tooltip v-if="!agentVisible" content="DramaAI Agent" placement="top" :showArrow="false" :hideAfter="0">
           <el-button
             class="agentButton"
             :class="{ standalone: activePanel !== 'canvas' }"
             :aria-expanded="agentVisible"
-            aria-label="Toonflow Agent"
+            aria-label="DramaAI Agent"
             aria-controls="agentPanel"
             @click="agentVisible = !agentVisible"></el-button>
         </el-tooltip>

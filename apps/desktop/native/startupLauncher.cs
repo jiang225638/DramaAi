@@ -32,7 +32,7 @@ internal static class startupLauncher
                     runtime.WaitForExit();
                     if (runtime.ExitCode == 2) return 2;
                     if (runtime.ExitCode != 0 || !File.Exists(Path.Combine(bin, "bun.exe")))
-                        throw new InvalidOperationException("必要运行时尚未准备完成，请重新打开 Toonflow。");
+                        throw new InvalidOperationException("必要运行时尚未准备完成，请重新打开 DramaAI。");
                 }
             }
             exitCode = startApp(bin, compatibility);
@@ -57,7 +57,7 @@ internal static class startupLauncher
         if (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("TOONFLOW_UPDATE_TRANSACTION"))) return exitCode;
         if (!compatibility) detail += "\r\n\r\n可双击安装目录中的“闪退请双击我兼容运行.bat”尝试兼容运行。";
         MessageBox.Show((compatibility ? "兼容" : "正常") + "启动方式失败或程序异常退出。\r\n" + detail,
-            "Toonflow", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            "DramaAI", MessageBoxButtons.OK, MessageBoxIcon.Error);
         return exitCode;
     }
 
@@ -78,7 +78,7 @@ internal static class startupLauncher
             options.EnvironmentVariables["TOONFLOW_STARTUP_PID"] = current.Id.ToString();
         using (Process child = Process.Start(options))
         {
-            if (child == null) throw new InvalidOperationException("无法取得 Toonflow 启动进程。");
+            if (child == null) throw new InvalidOperationException("无法取得 DramaAI 启动进程。");
             child.WaitForExit();
             return child.ExitCode;
         }

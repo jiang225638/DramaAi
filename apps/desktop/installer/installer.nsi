@@ -66,7 +66,7 @@ Function .onInit
   ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" "Release"
   SetRegView 32
   ${If} $0 < 533320
-    MessageBox MB_OK|MB_ICONSTOP "请先安装 .NET Framework 4.8.1 或更新 Windows，再安装 Toonflow ARM64。下载地址：https://dotnet.microsoft.com/download/dotnet-framework/net481" /SD IDOK
+    MessageBox MB_OK|MB_ICONSTOP "请先安装 .NET Framework 4.8.1 或更新 Windows，再安装 ${appName} ARM64。下载地址：https://dotnet.microsoft.com/download/dotnet-framework/net481" /SD IDOK
     SetErrorLevel 2
     Abort
   ${EndIf}
@@ -94,9 +94,9 @@ checkRunning:
   Pop $1
   ${If} $0 != 0
     ${If} $0 == 1
-      StrCpy $2 "Toonflow 仍在运行，请先关闭此安装目录的应用，再点击“重试”。$\r$\n$INSTDIR$\r$\n$1"
+      StrCpy $2 "${appName} 仍在运行，请先关闭此安装目录的应用，再点击“重试”。$\r$\n$INSTDIR$\r$\n$1"
     ${Else}
-      StrCpy $2 "无法确认 Toonflow 是否已关闭，已停止${operation}。请关闭应用后重试。$\r$\n检测返回码：$0$\r$\n$1"
+      StrCpy $2 "无法确认 ${appName} 是否已关闭，已停止${operation}。请关闭应用后重试。$\r$\n检测返回码：$0$\r$\n$1"
     ${EndIf}
     DetailPrint "$2"
     MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "$2" /SD IDCANCEL IDRETRY checkRunning
@@ -134,7 +134,7 @@ Function un.showUninstallOptions
     SetErrorLevel 2
     Quit
   ${EndIf}
-  ${NSD_CreateLabel} 0 0 100% 24u "即将卸载 Toonflow，点击“卸载”继续。"
+  ${NSD_CreateLabel} 0 0 100% 24u "即将卸载 ${appName}，点击“卸载”继续。"
   Pop $0
   ${NSD_CreateCheckbox} 0 36u 100% 14u "同时删除用户数据"
   Pop $removeUserDataCheckbox
@@ -164,7 +164,7 @@ Section "Install"
   IfFileExists "$INSTDIR\app\*.*" 0 installApp
   ReadINIStr $0 "$INSTDIR\toonflow.ini" "application" "identifier"
   ${If} $0 != "${appIdentifier}"
-    MessageBox MB_OK|MB_ICONSTOP "所选目录中已有不属于 Toonflow 的 app 文件夹，请选择其他安装目录。" /SD IDOK
+    MessageBox MB_OK|MB_ICONSTOP "所选目录中已有不属于 ${appName} 的 app 文件夹，请选择其他安装目录。" /SD IDOK
     SetErrorLevel 2
     Abort
   ${EndIf}
@@ -243,7 +243,7 @@ installApp:
   Pop $0
   Pop $1
   ${If} $0 != 0
-    MessageBox MB_OK|MB_ICONSTOP "应用解压失败，请确认目标目录可写并关闭正在运行的 Toonflow 后重试。$\r$\n解压返回码：$0$\r$\n$1" /SD IDOK
+    MessageBox MB_OK|MB_ICONSTOP "应用解压失败，请确认目标目录可写并关闭正在运行的 ${appName} 后重试。$\r$\n解压返回码：$0$\r$\n$1" /SD IDOK
     SetErrorLevel 2
     Abort
   ${EndIf}
@@ -286,7 +286,7 @@ installApp:
   WriteRegStr HKCU "${uninstallKey}" "QuietUninstallString" '$\"$INSTDIR\UninstallNSIS.exe$\" /S'
   IfErrors installFailed
   StrCpy $installStep "注册 toonflow:// 协议"
-  WriteRegStr HKCU "Software\Classes\toonflow" "" "URL:Toonflow Protocol"
+  WriteRegStr HKCU "Software\Classes\toonflow" "" "URL:${appName} Protocol"
   WriteRegStr HKCU "Software\Classes\toonflow" "URL Protocol" ""
   WriteRegStr HKCU "Software\Classes\toonflow\DefaultIcon" "" '$\"$INSTDIR\app\Resources\app.ico$\",0'
   WriteRegStr HKCU "Software\Classes\toonflow\shell\open\command" "" '$\"$INSTDIR\app\Resources\app\protocolLauncher.exe$\" $\"%1$\"'
@@ -294,11 +294,11 @@ installApp:
   CreateShortCut "$DESKTOP\${appName}.lnk" "$INSTDIR\app\Resources\app\startupLauncher.exe" "" "$INSTDIR\app\Resources\app.ico"
   IfErrors 0 installDone
   ; ACT: 快捷方式不影响程序使用，失败时保留成功安装结果并告知手动启动路径。
-  MessageBox MB_OK|MB_ICONEXCLAMATION "Toonflow 已安装，但无法创建桌面快捷方式。可以从以下位置启动：$\r$\n$INSTDIR\app\Resources\app\startupLauncher.exe" /SD IDOK
+  MessageBox MB_OK|MB_ICONEXCLAMATION "${appName} 已安装，但无法创建桌面快捷方式。可以从以下位置启动：$\r$\n$INSTDIR\app\Resources\app\startupLauncher.exe" /SD IDOK
   Goto installDone
 
 installFailed:
-  MessageBox MB_OK|MB_ICONSTOP "安装未完成。$\r$\n失败步骤：$installStep$\r$\n安装目录：$INSTDIR$\r$\n$\r$\n请确认目录可写并关闭 Toonflow 后重试，详细信息见安装窗口。" /SD IDOK
+  MessageBox MB_OK|MB_ICONSTOP "安装未完成。$\r$\n失败步骤：$installStep$\r$\n安装目录：$INSTDIR$\r$\n$\r$\n请确认目录可写并关闭 ${appName} 后重试，详细信息见安装窗口。" /SD IDOK
   SetErrorLevel 2
   Abort
 installDone:
@@ -309,13 +309,13 @@ Section "Uninstall"
   GetFullPathName $0 "$INSTDIR"
   ReadINIStr $1 "$INSTDIR\toonflow.ini" "application" "installDirectory"
   ${If} $0 != $1
-    MessageBox MB_OK|MB_ICONSTOP "卸载目录与 Toonflow 的安装目录不一致，已停止卸载。" /SD IDOK
+    MessageBox MB_OK|MB_ICONSTOP "卸载目录与 ${appName} 的安装目录不一致，已停止卸载。" /SD IDOK
     SetErrorLevel 2
     Abort
   ${EndIf}
   ReadINIStr $0 "$INSTDIR\toonflow.ini" "application" "identifier"
   ${If} $0 != "${appIdentifier}"
-    MessageBox MB_OK|MB_ICONSTOP "无法确认此目录属于 Toonflow，已停止卸载。" /SD IDOK
+    MessageBox MB_OK|MB_ICONSTOP "无法确认此目录属于 ${appName}，已停止卸载。" /SD IDOK
     SetErrorLevel 2
     Abort
   ${EndIf}
@@ -378,7 +378,7 @@ uninstallMetadataFailed:
   SetErrorLevel 2
   Goto uninstallDone
 uninstallFailed:
-  MessageBox MB_OK|MB_ICONSTOP "未能删除全部文件，请关闭 Toonflow 及相关窗口后重新卸载。用户数据仅按刚才的选择处理。" /SD IDOK
+  MessageBox MB_OK|MB_ICONSTOP "未能删除全部文件，请关闭 ${appName} 及相关窗口后重新卸载。用户数据仅按刚才的选择处理。" /SD IDOK
   SetErrorLevel 2
   Abort
 uninstallDone:

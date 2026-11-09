@@ -1,18 +1,4 @@
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=Toonflow&fontSize=90&fontColor=ffffff&animation=fadeIn&fontAlignY=50" alt="Toonflow" width="100%" />
-
-<p>
-  <a href="https://github.com/HBAI-Ltd/Toonflow-app">
-    <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white" alt="GitHub" />
-  </a>
-  &nbsp;|&nbsp;
-  <a href="https://gitee.com/HBAI-Ltd/Toonflow-app">
-    <img src="https://img.shields.io/badge/Gitee-C71D23?style=flat-square&logo=gitee&logoColor=white" alt="Gitee" />
-  </a>
-  &nbsp;|&nbsp;
-  <a href="https://atomgit.com/HBAI-Ltd/Toonflow-app">
-    <img src="./docs/images/atomgitLogo.svg" alt="AtomGit" height="20" />
-  </a>
-</p>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=DramaAI&fontSize=90&fontColor=ffffff&animation=fadeIn&fontAlignY=50" alt="DramaAI" width="100%" />
 
 <p align="center">
   <strong>简体中文</strong> |
@@ -45,451 +31,228 @@
 <div align="center">
 
 <p align="center">
-  <img src="./docs/images/logo.png" alt="Toonflow Logo" width="120" height="120" />
+  <img src="./docs/images/logo.png" alt="DramaAI Logo" width="120" height="120" />
 </p>
 
-<h1 align="center">Toonflow｜开源 AI 短剧、漫剧与视频创作平台</h1>
+<h1 align="center">DramaAI｜开源与本地化 AI 短剧、漫剧与视频创作平台</h1>
 
 <a href="https://git.io/typing-svg">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://readme-typing-svg.demolab.com?font=Fira+Code&size=40&duration=3000&pause=1000&color=FFFFFF&center=true&vCenter=true&width=600&lines=Toonflow;AI%E7%9F%AD%E5%89%A7%E5%B7%A5%E5%8E%82;%E8%AE%A9%E7%81%B5%E6%84%9F%E6%88%90%E4%B8%BA%E7%9C%8B%E5%BE%97%E8%A7%81%E7%9A%84%E6%95%85%E4%BA%8B" />
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=40&duration=3000&pause=1000&color=000000&center=true&vCenter=true&width=600&lines=Toonflow;AI%E7%9F%AD%E5%89%A7%E5%B7%A5%E5%8E%82;%E8%AE%A9%E7%81%B5%E6%84%9F%E6%88%90%E4%B8%BA%E7%9C%8B%E5%BE%97%E8%A7%81%E7%9A%84%E6%95%85%E4%BA%8B" alt="Toonflow · AI 短剧工厂 · 让灵感成为看得见的故事" width="600" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://readme-typing-svg.demolab.com?font=Fira+Code&size=40&duration=3000&pause=1000&color=FFFFFF&center=true&vCenter=true&width=600&lines=DramaAI;AI%E7%9F%AD%E5%89%A7%E5%B7%A5%E5%8E%82;%E8%AE%A9%E7%81%B5%E6%84%9F%E6%88%90%E4%B8%BA%E7%9C8B%E5%BE%97%E8%A7%81%E7%9A%84%E6%95%85%E4%BA%8B" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=40&duration=3000&pause=1000&color=000000&center=true&vCenter=true&width=600&lines=DramaAI;AI%E7%9F%AD%E5%89%A7%E5%B7%A5%E5%8E%82;%E8%AE%A9%E7%81%B5%E6%84%9F%E6%88%90%E4%B8%BA%E7%9C%8B%E5%BE%97%E8%A7%81%E7%9A%84%E6%95%85%E4%BA%8B" alt="DramaAI · AI 短剧工厂 · 让灵感成为看得见的故事" width="600" />
   </picture>
 </a>
 
 <p align="center">
-  <a href="https://github.com/HBAI-Ltd/Toonflow-app/stargazers">
-    <img src="https://img.shields.io/github/stars/HBAI-Ltd/Toonflow-app?style=for-the-badge&logo=github" alt="Stars Badge" />
-  </a>
   <a href="./LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License Badge" />
   </a>
-  <a href="https://github.com/HBAI-Ltd/Toonflow-app/releases">
-    <img src="https://img.shields.io/github/v/release/HBAI-Ltd/Toonflow-app?style=for-the-badge" alt="Release" />
-  </a>
+  <img src="https://img.shields.io/badge/Model-BYOK%20%2F%20Local-success?style=for-the-badge" alt="BYOK Model" />
+  <img src="https://img.shields.io/badge/Privacy-100%25%20Local-blue?style=for-the-badge" alt="100% Local Privacy" />
 </p>
-<p align="center">
-  <a href="https://github.com/HBAI-Ltd/Toonflow-app/network/members">
-    <img src="https://img.shields.io/github/forks/HBAI-Ltd/Toonflow-app?style=for-the-badge&logo=github&color=orange" alt="Forks Badge" />
-  </a>
-  <a href="https://atomgit.com/HBAI-Ltd/Toonflow-app">
-    <img src="https://img.shields.io/badge/AtomGit-G--Star%20No.540-FF6B35?style=for-the-badge&logo=git&logoColor=white" alt="AtomGit G-Star No.540" />
-  </a>
-  <a href="https://discord.gg/HEjKmpNpAZ">
-    <img src="https://img.shields.io/badge/Discord-Community-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
-  </a>
-</p>
-<p align="center">
-  <a href="https://github.com/HBAI-Ltd/Toonflow-app/issues">
-    <img src="https://img.shields.io/github/issues/HBAI-Ltd/Toonflow-app?style=for-the-badge&color=F48D73" alt="Issues" />
-  </a>
-  <a href="https://github.com/HBAI-Ltd/Toonflow-app/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/HBAI-Ltd/Toonflow-app?style=for-the-badge&color=2088FF" alt="Contributors" />
-  </a>
-  <a href="https://github.com/HBAI-Ltd/Toonflow-app/commits">
-    <img src="https://img.shields.io/github/last-commit/HBAI-Ltd/Toonflow-app?style=for-the-badge&color=blueviolet" alt="Last Commit" />
-  </a>
-</p>
+
 <p align="center">
   <img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/TypeScript/typescript2.svg" alt="TypeScript" height="28" />&nbsp;
-  <img src="https://img.shields.io/badge/Bun-1.4.3-14151A?style=for-the-badge&logo=bun&logoColor=white" alt="Bun 1.4.3" />&nbsp;
+  <img src="https://img.shields.io/badge/Bun-1.4.4-14151A?style=for-the-badge&logo=bun&logoColor=white" alt="Bun 1.4.4" />&nbsp;
   <img src="https://img.shields.io/badge/Vue-3-42B883?style=for-the-badge&logo=vuedotjs&logoColor=white" alt="Vue 3" />&nbsp;
   <img src="https://img.shields.io/badge/Desktop-Electrobun-8257E5?style=for-the-badge" alt="Electrobun" />
 </p>
 
 <p align="center">
-  <a href="https://trendshift.io/repositories/24197?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-24197#achievements" target="_blank" rel="noopener noreferrer">
-    <img src="https://trendshift.io/api/badge/trendshift/repositories/24197/daily?language=HTML" alt="HBAI-Ltd/Toonflow-app | Trendshift HTML Repository Of The Day" width="250" height="55" />
-  </a>
-  <a href="https://trendshift.io/repositories/24197?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-24197#achievements" target="_blank" rel="noopener noreferrer">
-    <img src="https://trendshift.io/api/badge/trendshift/repositories/24197/daily?language=Vue" alt="HBAI-Ltd/Toonflow-app | Trendshift Vue Repository Of The Day" width="250" height="55" />
-  </a>
-  <a href="https://trendshift.io/repositories/24197?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-24197#achievements" target="_blank" rel="noopener noreferrer">
-    <img src="https://trendshift.io/api/badge/trendshift/repositories/24197/daily?language=TypeScript" alt="HBAI-Ltd/Toonflow-app | Trendshift TypeScript Repository Of The Day" width="250" height="55" />
-  </a>
-</p>
-<p align="center">
-  <a href="https://trendshift.io/repositories/24197?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-24197#achievements" target="_blank" rel="noopener noreferrer">
-    <img src="https://trendshift.io/api/badge/trendshift/repositories/24197/weekly?language=Vue" alt="HBAI-Ltd/Toonflow-app | Trendshift Vue Repository Of The Week" width="250" height="55" />
-  </a>
-  <a href="https://trendshift.io/repositories/24197?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-24197#achievements" target="_blank" rel="noopener noreferrer">
-    <img src="https://trendshift.io/api/badge/trendshift/repositories/24197/weekly?language=HTML" alt="HBAI-Ltd/Toonflow-app | Trendshift HTML Repository Of The Week" width="250" height="55" />
-  </a>
-  <a href="https://trendshift.io/repositories/24197?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-24197#achievements" target="_blank" rel="noopener noreferrer">
-    <img src="https://trendshift.io/api/badge/trendshift/repositories/24197/weekly?language=TypeScript" alt="HBAI-Ltd/Toonflow-app | Trendshift TypeScript Repository Of The Week" width="250" height="55" />
-  </a>
-</p>
-<p align="center">
-  <a href="https://trendshift.io/repositories/24197?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-24197#achievements" target="_blank" rel="noopener noreferrer">
-    <img src="https://trendshift.io/api/badge/trendshift/repositories/24197/monthly?language=HTML" alt="HBAI-Ltd/Toonflow-app | Trendshift HTML Repository Of The Month" width="250" height="55" />
-  </a>
+  <strong>DramaAI</strong> 是面向短剧、漫剧和短视频创作者的本地化/桌面端 AI 创作平台（基于开源项目二次开发，遵循 MIT 协议）。<br />
+  采用 <strong>BYOK（Bring Your Own Key，自带秘钥 / 本地算力）独立桌面客户端</strong> 模式：无强制订阅、无月费、无算力溢价。<br />
+  通过无限画布编写剧本与分镜、管理角色三视图与场景资产、生成连贯图片与视频镜头。<br />
+  支持直连本地 ComfyUI 独立显卡算力与国内外主流高性价比 API，提供 100% 本地隐私安全、离线创作能力与高扩展性 AI Agent 创作流。
 </p>
 
-Toonflow 是面向短剧、漫剧和短视频创作者的开源 AI 创作工具。通过无限画布编写剧本与分镜、管理角色和场景素材、生成图片与视频。支持本地部署、自由接入模型，并可通过 AI Agent、MCP 与插件扩展创作流程。
+<p align="center">
+  <a href="#1-🌟-核心亮点">核心亮点</a> ·
+  <a href="#2-🎬-如何用-dramaai-制作-ai-短剧与漫剧">创作流程</a> ·
+  <a href="#3-💡-常见问题">常见问题</a> ·
+  <a href="#4-📸-产品界面">产品界面</a> ·
+  <a href="#5-🚀-下载与快速开始">下载与快速开始</a> ·
+  <a href="#7-📜-开源许可与致谢">开源许可与致谢</a>
+</p>
 
 </div>
-
-<div align="center">
-  <table>
-    <tr>
-      <td width="50%" align="center">
-        <a href="./docs/images/gStar.png">
-          <img src="./docs/images/gStar.png" alt="Toonflow AtomGit G-Star 认证证书 No.540" width="100%" />
-        </a>
-      </td>
-      <td width="50%" align="center">
-        <a href="./docs/images/gvp.jpg">
-          <img src="./docs/images/gvp.jpg" alt="Toonflow Gitee GVP 认证证书" width="100%" />
-        </a>
-      </td>
-    </tr>
-  </table>
-</div>
-
-<p align="center">
-  <a href="https://github.com/HBAI-Ltd/Toonflow-app/releases">下载客户端</a> ·
-  <a href="https://qcn7xdsqgc4z.feishu.cn/docx/RXFqdgR2Xo0dXZxGfd0cZCGgnwf">使用教程</a> ·
-  <a href="https://api.toonflow.net/console/plugIn">插件市场</a> ·
-  <a href="https://qcn7xdsqgc4z.feishu.cn/docx/KNBNd9naqolsy6xjAOCcEAkqnRd">开发者文档</a> ·
-  <a href="https://api.toonflow.net/">官方模型平台</a>
-</p>
 
 ---
 
-## 1. 💛 赞助与支持
+## 1. 🌟 核心亮点
 
-感谢以下合作伙伴对 Toonflow 开源项目的支持。
+DramaAI 把剧本创作、资产管理、分镜设计与视频生成全部整合进同一张无限画布：
 
-<table>
-  <tr>
-    <td width="50%" valign="top">
-      <a href="https://metaso.cn/minimax-h3/?s=toon"><img src="./docs/images/sponsors/metaso.svg" alt="秘塔" height="28" valign="middle" /> <strong>秘塔</strong></a>
-      <br />
-      <sub>秘塔科技提供高性价比的 MiniMax H3 视频生成服务：768P 仅 0.09 元/秒，2K 仅 0.15 元/秒。支持原生 2K、音画同步，API 兼容 OpenAI 协议，同时支持 ComfyUI、无限画布，无需自行部署 GPU。</sub>
-      <br /><br />
-      <sub>🎁 通过 <a href="https://metaso.cn/minimax-h3/?s=toon">专属链接注册</a>，即可领取赠送额度及专属优惠。商务对接可加微信：metasota12</sub>
-    </td>
-    <td width="50%" valign="top">
-      <a href="https://go.apimart.ai/gh-toonflow-app"><img src="./docs/images/sponsors/apiMart.jpg" alt="APIMart" height="28" valign="middle" /> <strong>APIMart</strong></a>
-      <br />
-      <sub>感谢 APIMart 赞助了本项目！APIMart 是专注 AI 图片/视频生成的低价 API 平台，GPT-Image-2 低至 $0.006/张，1 美元可出图 160+ 张。图片、视频一套异步 API 通吃，提交任务拿 ID、回调取结果，跑批万张不超时、换模型不改代码。按量付费、无月费，通过此<a href="https://go.apimart.ai/gh-toonflow-app">注册链接</a>注册即可开用。</sub>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <a href="https://www.compshare.cn/video-studio?ytag=GPU_YY_YX_git_toonflow"><img src="./docs/images/sponsors/compShare.png" alt="优云智算" height="28" valign="middle" /> <strong>优云智算</strong></a>
-      <br />
-      <sub>优云智算提供高性价比 H3 视频生成服务，涵盖文生视频、首尾帧及全能参考。支持最长 30s 视频、原生 2K 画质，768P 仅 0.08 元/秒。支持 API 调用、企业高并发、自助开票。</sub>
-      <br /><br />
-      <sub>🎁 通过 <a href="https://www.compshare.cn/video-studio?ytag=GPU_YY_YX_git_toonflow">专属链接注册</a>，可得免费 5 元平台体验金！</sub>
-    </td>
-    <td width="50%" valign="top"></td>
-  </tr>
-</table>
+| 能力维度 | 特性说明 |
+| :--- | :--- |
+| 🏠 **100% 本地隐私与安全** | 项目工程与生成资产完整保存在本地设备，彻底切断外部遥测与在线依赖，数据完全由创作者掌控。 |
+| 🔑 **BYOK 自带秘钥 · 零月租** | 拒绝高昂的 SaaS 订阅费与算力代充溢价，自由配置第三方高性价比 API（硅基流动、可灵、海螺、OpenAI、DeepSeek 等），随用随充，成本透明直降 90%。 |
+| ⚡ **本地 ComfyUI 显卡算力直连** | 支持直连本机独立显卡（RTX 3060/4070/4090 等）或局域网 ComfyUI 算力节点，0 边际成本无限生成角色图像与镜头视频。 |
+| 🖼️ **无限创作画布** | 在同一张高自由度画布中可视化编排剧本文本、角色三视图、场景概念图、分镜脚本与镜头生成节点。 |
+| 🤖 **开放 AI Agent & MCP** | 内置剧本拆解、分镜策划与镜头提示词辅助 Agent，支持通过 MCP（Model Context Protocol）协议与插件生态自由扩展创作能力。 |
+| 📦 **开箱即用工程模板** | 预置爆款短剧工程模板与分镜提示词库（男频逆袭、女频穿书、豪门复仇等），3 分钟内跑通第一个短剧样片。 |
+| 🌐 **21 种语言支持** | 原生支持简体中文、繁體中文、English 等全球 21 种界面语言。 |
+
+---
+
+## 2. 🎬 如何用 DramaAI 制作 AI 短剧与漫剧
+
+```mermaid
+flowchart LR
+    A["📝 剧本与分镜拆解"] --> B["🎨 角色与场景资产设定"]
+    B --> C["🎬 批量生成视频镜头"]
+    C --> D["🎞️ 画布预览与剪辑成片"]
+```
+
+1. **编写剧本与分镜**：在文本节点中整理故事大纲、角色小传与分镜台本，可调用语言模型辅助拆解分镜镜头、生成摄影机运动与画面提示词。
+2. **准备角色与场景素材**：导入参考图或在画布中利用生图节点/本地 ComfyUI 批量生成角色三视图（正面/侧面/背面）、场景概念图与关键道具。
+3. **生成连贯视频镜头**：将文本分镜节点与角色/场景参考图连线，选择视频生成模型（支持文生视频、图生视频、首尾帧控镜等），批量并发生成镜头片段。
+4. **预览、整理与导出**：在无限画布中实时回放、对齐分镜顺序，一键导出全部视频资产或连贯预览，轻松衔接剪辑软件完成成片输出。
+
+---
+
+## 3. 💡 常见问题
 
 <details>
-<summary><strong>👉成为赞助商👈</strong></summary>
+<summary><strong>Q1: 为什么 DramaAI 采用 BYOK（自带秘钥）模式？</strong></summary>
 
-<p align="center">
-  <img src="./docs/images/businessQr.png" alt="商务合作微信二维码" width="200" />
-</p>
-
-<p align="center"><sub>此联系方式仅用于商务合作接洽，不提供问题答疑。使用问题欢迎在交流群交流，需求与 BUG 可通过反馈表提交。感谢理解。</sub></p>
-
+市面上多数 AI 创作工具采用 SaaS 月租或点数包模式，除了软件费用外往往还有极高的算力溢价。DramaAI 采用客户端独立运行模式，用户直接在设置面板中填入第三方模型 API Key（如硅基流动、可灵、Fal.ai 等），或直接连接本地显卡。算力成本直接支付给服务商，绝无中间抽成与隐藏费用。
 </details>
 
----
+<details>
+<summary><strong>Q2: 没有独立显卡也能使用 DramaAI 吗？</strong></summary>
 
-## 2. 🌟 亮点
+可以。DramaAI 完整支持接入国内外主流高性价比云端 API 服务商。只需在设置面板中填入对应服务商的 API Key 即可快速开始创作；对于拥有 RTX 3060 及以上显卡的用户，更可启用本地 ComfyUI 享受零边际成本的无限出图生视频体验。
+</details>
 
-Toonflow 是面向短剧、漫剧与短视频制作的开源 AI 创作平台，把剧本、资产与视频片段整合进同一张无限画布。
+<details>
+<summary><strong>Q3: 创作的数据和素材会上传到云端服务器吗？</strong></summary>
 
-| 能力 | 说明 |
-| --- | --- |
-| 🏠 **本地部署** | 项目与素材保存在自己的设备或服务器，支持桌面、Android、Docker 与服务器部署。 |
-| 🖼️ **无限画布** | 在同一画布中组织剧本、角色、场景与视频片段。 |
-| 🔌 **MCP** | 通过 MCP 连接外部工具与服务。 |
-| 🧩 **插件市场** | 通过[插件市场](https://api.toonflow.net/console/plugIn)扩展节点、工具与创作能力。 |
-| 🤖 **开放 Agent** | 开放提示词、工具和 A2A，支持自定义 Agent 行为及外部协作。 |
-| 🔧 **自由接入模型** | 配置第三方 API，也可接入本地 ComfyUI 和 LLM。 |
-| 🌐 **多语言支持** | 支持 21 种界面语言。 |
+不会。DramaAI 经过彻底的隐私纯净化改造，切断了原版所有外部遥测与无意义的数据上报。您的剧本、分镜图、生成视频及工程工程文件均 100% 存储于本机指定的工作目录中，断网状态下亦可正常使用核心功能。
+</details>
 
-### 如何用 Toonflow 制作 AI 短剧与漫剧
-
-1. **编写剧本与分镜**：在文本节点中整理故事、人物设定和镜头描述，使用语言模型辅助创作，再审阅与修改内容。
-2. **准备角色与场景素材**：导入参考图片，或通过图片生成节点制作角色、场景和分镜图。
-3. **生成视频镜头**：连接文本与图片参考，选择视频模型和生成模式，按镜头生成视频片段。
-4. **预览、整理与下载**：在无限画布中预览和组织图片、视频片段，下载素材后按创作需求继续处理。
-
-支持的参考素材、视频时长、分辨率和音频能力取决于所选模型与供应商。
-
-### 常见问题
-
-**Toonflow 可以用于哪些 AI 短剧和漫剧制作环节？**
-
-Toonflow 提供文本、图片与视频生成节点，可用于剧本与分镜创作、角色和场景素材制作、视频镜头生成，以及素材的预览与整理。创作者需要审阅和调整内容，具体生成能力取决于配置的模型。
-
-**Toonflow 免费吗？模型调用需要付费吗？**
-
-Toonflow 采用 MIT 开源许可，可自行部署。第三方模型服务的 API 调用可能收费；使用本地模型或 ComfyUI 时，需要自行准备相应的运行环境与算力。作品示例中的制作费用仅代表该案例，不是固定价格。
-
-**可以接入自己的模型和 ComfyUI 工作流吗？**
-
-可以配置语言模型与媒体模型服务，也可通过自定义供应商适配接入已有的 ComfyUI 工作流。具体接入方式取决于服务 API、模型与工作流，可参考[使用教程](https://qcn7xdsqgc4z.feishu.cn/docx/RXFqdgR2Xo0dXZxGfd0cZCGgnwf)与[开发者文档](https://qcn7xdsqgc4z.feishu.cn/docx/KNBNd9naqolsy6xjAOCcEAkqnRd)。
+<details>
+<summary><strong>Q4: DramaAI 支持哪些语言？</strong></summary>
 
 <a id="languages"></a>
-
-### 多语言支持
-
-支持的语言：简体中文、繁體中文、English、日本語、Русский、Tiếng Việt、ไทย、한국어、हिन्दी、Bahasa Indonesia、Bahasa Melayu、Filipino、বাংলা、اردو、தமிழ்、తెలుగు、मराठी、ਪੰਜਾਬੀ、العربية、فارسی、Türkçe。
+原生支持 21 种语言：简体中文、繁體中文、English、日本語、Русский、Tiếng Việt、ไทย、한국어、हिन्दी、Bahasa Indonesia、Bahasa Melayu、Filipino、বাংলা、اردو、தமிழ்、తెలుగు、मराठी、ਪੰਜਾਬੀ、العربية、فارسی、Türkçe。
+</details>
 
 ---
 
-## 3. 📸 截图
+## 4. 📸 产品界面
 
 <div align="center">
 
-<a href="./docs/images/screenshots/projectHome.png"><img src="./docs/images/screenshots/projectHome.png" alt="Toonflow 项目首页与灵感创作" width="80%" /></a><br /><sub>项目首页与灵感创作</sub>
+<a href="./docs/images/screenshots/projectHome.png"><img src="./docs/images/screenshots/projectHome.png" alt="DramaAI 项目首页与灵感创作" width="80%" /></a><br /><sub>项目首页与灵感创作</sub>
 
-<a href="./docs/images/screenshots/quickStart.png"><img src="./docs/images/screenshots/quickStart.png" alt="Toonflow 首次启动与快速配置" width="80%" /></a><br /><sub>首次启动与快速配置</sub>
+<a href="./docs/images/screenshots/quickStart.png"><img src="./docs/images/screenshots/quickStart.png" alt="DramaAI 首次启动与快速配置" width="80%" /></a><br /><sub>首次启动与快速配置</sub>
 
-<a href="./docs/images/screenshots/canvasDark.png"><img src="./docs/images/screenshots/canvasDark.png" alt="Toonflow 深色主题画布与 AI 助手" width="80%" /></a><br /><sub>创作画布 · 深色主题</sub>
+<a href="./docs/images/screenshots/canvasDark.png"><img src="./docs/images/screenshots/canvasDark.png" alt="DramaAI 深色主题画布与 AI 助手" width="80%" /></a><br /><sub>创作画布 · 深色主题</sub>
 
-<a href="./docs/images/screenshots/canvasLight.png"><img src="./docs/images/screenshots/canvasLight.png" alt="Toonflow 浅色主题画布与 AI 助手" width="80%" /></a><br /><sub>创作画布 · 浅色主题</sub>
+<a href="./docs/images/screenshots/canvasLight.png"><img src="./docs/images/screenshots/canvasLight.png" alt="DramaAI 浅色主题画布与 AI 助手" width="80%" /></a><br /><sub>创作画布 · 浅色主题</sub>
 
-<a href="./docs/images/screenshots/assetCanvas.png"><img src="./docs/images/screenshots/assetCanvas.png" alt="Toonflow 角色、场景与道具资产画布" width="80%" /></a><br /><sub>角色、场景与道具资产</sub>
+<a href="./docs/images/screenshots/assetCanvas.png"><img src="./docs/images/screenshots/assetCanvas.png" alt="DramaAI 角色、场景与道具资产画布" width="80%" /></a><br /><sub>角色、场景与道具资产</sub>
 
-<a href="./docs/images/screenshots/directorStudio.png"><img src="./docs/images/screenshots/directorStudio.png" alt="Toonflow 3D 导演台与镜头预演" width="80%" /></a><br /><sub>3D 导演台与镜头预演</sub>
+<a href="./docs/images/screenshots/directorStudio.png"><img src="./docs/images/screenshots/directorStudio.png" alt="DramaAI 3D 导演台与镜头预演" width="80%" /></a><br /><sub>3D 导演台与镜头预演</sub>
 
-<a href="./docs/images/screenshots/characterImageGeneration.png"><img src="./docs/images/screenshots/characterImageGeneration.png" alt="Toonflow 角色三视图图片生成" width="80%" /></a><br /><sub>角色三视图与图片生成</sub>
+<a href="./docs/images/screenshots/characterImageGeneration.png"><img src="./docs/images/screenshots/characterImageGeneration.png" alt="DramaAI 角色三视图图片生成" width="80%" /></a><br /><sub>角色三视图与图片生成</sub>
 
-<a href="./docs/images/screenshots/videoGeneration.png"><img src="./docs/images/screenshots/videoGeneration.png" alt="Toonflow 多参考素材视频生成" width="80%" /></a><br /><sub>多参考素材视频生成</sub>
+<a href="./docs/images/screenshots/videoGeneration.png"><img src="./docs/images/screenshots/videoGeneration.png" alt="DramaAI 多参考素材视频生成" width="80%" /></a><br /><sub>多参考素材视频生成</sub>
 
-<a href="./docs/images/screenshots/nodeMenu.png"><img src="./docs/images/screenshots/nodeMenu.png" alt="Toonflow 节点菜单与分组操作" width="80%" /></a><br /><sub>节点菜单与分组操作</sub>
+<a href="./docs/images/screenshots/nodeMenu.png"><img src="./docs/images/screenshots/nodeMenu.png" alt="DramaAI 节点菜单与分组操作" width="80%" /></a><br /><sub>节点菜单与分组操作</sub>
 
-<a href="./docs/images/screenshots/pluginMarket.png"><img src="./docs/images/screenshots/pluginMarket.png" alt="Toonflow 插件市场" width="80%" /></a><br /><sub>插件市场</sub>
+<a href="./docs/images/screenshots/pluginMarket.png"><img src="./docs/images/screenshots/pluginMarket.png" alt="DramaAI 插件市场" width="80%" /></a><br /><sub>插件市场</sub>
 
 </div>
 
 ---
 
-## 4. 🚀 下载并安装
+## 5. 🚀 下载与快速开始
 
-### 4.1 客户端安装
+### 5.1 桌面客户端安装
 
-| 操作系统 | GitHub                                                       |
-| -------- | ------------------------------------------------------------ |
-| Windows x64 | [EXE 安装包](https://github.com/HBAI-Ltd/Toonflow-app/releases) |
-| Windows ARM64 | [EXE 安装包](https://github.com/HBAI-Ltd/Toonflow-app/releases) |
-| macOS Apple Silicon（ARM64，macOS 14 及以上） | [DMG 安装包](https://github.com/HBAI-Ltd/Toonflow-app/releases) |
-| macOS Intel（x64，macOS 14 及以上） | [DMG 安装包](https://github.com/HBAI-Ltd/Toonflow-app/releases) |
-| Linux x64（Debian / Ubuntu） | [DEB 安装包](https://github.com/HBAI-Ltd/Toonflow-app/releases) |
-| Linux ARM64（Debian / Ubuntu） | [DEB 安装包](https://github.com/HBAI-Ltd/Toonflow-app/releases) |
-| Android ARM64 | [APK 下载](https://github.com/HBAI-Ltd/Toonflow-app/releases/latest) |
+| 操作系统 | 安装包类型 | 适用环境与架构 |
+| :--- | :--- | :--- |
+| **Windows** | `DramaAI-版本号-Setup.exe` | Windows 10/11 x64（Intel / AMD 处理器） |
+| **Windows ARM64** | `DramaAI-版本号-win-arm64-Setup.exe` | 骁龙等 Windows 11 ARM64 设备 |
+| **macOS Apple Silicon** | `DramaAI-版本号-macos-arm64.dmg` | M1 / M2 / M3 / M4 系列芯片（macOS 14+） |
+| **macOS Intel** | `DramaAI-版本号-macos-x64.dmg` | Intel 处理器 Mac（macOS 14+） |
+| **Linux** | `DramaAI-版本号-linux-x64.deb` | Ubuntu / Debian x64 系统 |
 
-Android 版仅支持 ARM64 设备，下载发布页中的 `toonflow-版本号-android-arm64.apk` 安装。手机内置本地 Bun 后端，可独立运行；也可从首页「设备互联」扫码或手动连接已开启共享的电脑或远程后端（支持局域网与公网）。
-
-Windows 安装器会自动检测并安装 WebView2；如果安装后打开闪退，请前往 [WebView2 下载页面](https://developer.microsoft.com/microsoft-edge/webview2/) 手动安装运行时。
-
-Windows 的 Intel / AMD 电脑选择 `toonflow-版本号-Setup.exe`，ARM64 电脑选择 `toonflow-版本号-win-arm64-Setup.exe`。ARM64 需要 .NET Framework 4.8.1，较新的 Windows 11 已内置。
-
-Linux 选择对应架构的 `toonflow-版本号-linux-x64.deb` 或 `toonflow-版本号-linux-arm64.deb`，在下载目录执行 `sudo apt install ./安装包文件名.deb`，安装后从应用菜单打开。安装需要联网；apt 会准备 FFmpeg、curl、unzip、CA 证书等依赖，安装脚本在解包应用前下载固定版本的 Bun 并校验大小与 SHA-256，配置阶段再安装运行时。下载或校验失败会在解包前中止安装。
-
-macOS 两种架构均使用统一的 Electrobun SDK，最低支持 macOS 14。选择对应架构的 `toonflow-版本号-macos-arm64.dmg` 或 `toonflow-版本号-macos-x64.dmg`，打开后将 `toonflow.app` 拖入“应用程序”，再从“应用程序”打开 Toonflow。正式发布流程使用 Developer ID Application 签署应用与 DMG，并完成 Apple 公证。旧版 Intel Mac 客户端首次迁移时须下载完整 DMG 覆盖安装，不能通过旧版增量更新直接迁移；安装前退出应用并备份原数据目录。
-
-macOS 若遇到系统安全提示，请按以下顺序处理。
-
-<details>
-<summary><strong>macOS 无法安装或打开时的处理方法</strong></summary>
-
-**1. 在“隐私与安全性”中允许 Toonflow**
-
-如果提示“无法验证开发者”或“Apple 无法检查 App 是否包含恶意软件”，先尝试打开 Toonflow，再前往“系统设置 → 隐私与安全性”，找到 Toonflow 被阻止的提示，点击“仍要打开”，并按提示确认。详见 [Apple 官方说明](https://support.apple.com/zh-cn/102445)。
-
-**2. 仍因系统隔离限制无法打开时，再尝试移除隔离属性**
-
-确认应用来自官方发布页，并已放入“应用程序”后，在终端执行以下命令，再重新打开。应用名称或安装位置不同时，请调整路径。
-
-```bash
-sudo xattr -rd com.apple.quarantine /Applications/toonflow.app
-```
-
-**3. 最后手段：临时允许任何来源的 App**
-
-前两种方法均无效且确认应用来源可信时，可尝试在终端执行：
-
-```bash
-sudo spctl --master-disable
-```
-
-随后打开“系统设置 → 隐私与安全性”，在“安全性”中的“允许从以下位置下载的 App”选择“任何来源”（如果系统提供该选项），并按提示确认。不同 macOS 版本的选项与命令支持可能不同。
-
-此操作会放宽所有 App 的安全限制。完成后建议将允许来源恢复为“App Store 和被认可的开发者”。
-
-</details>
-
-更多操作说明请查看 [使用教程](https://qcn7xdsqgc4z.feishu.cn/docx/RXFqdgR2Xo0dXZxGfd0cZCGgnwf)。
+> **提示**：
+> - Windows 安装器会自动检测并准备 WebView2 运行时；若启动异常，请确保系统已安装最新 Microsoft Edge WebView2 Runtime。
+> - macOS 用户若打开时遇到系统安全提示，请前往“系统设置 → 隐私与安全性”点击“仍要打开”。
 
 ---
 
-### 4.2 Docker 安装
+### 5.2 开发者源码运行
 
-先安装 Git、[Docker Engine](https://docs.docker.com/engine/install/) 和 Docker Compose；Windows / macOS 可使用 Docker Desktop 的 Linux 容器模式。仓库提供 [Dockerfile](./Dockerfile)、[Compose 配置](./compose.yaml) 和 [构建排除规则](./.dockerignore)，基于 Bun 1.4.3 构建，镜像内包含 FFmpeg。
+本项目推荐使用 [Bun 1.4.4](https://bun.sh/) 作为底层运行时与包管理器：
 
-<details>
-<summary><strong>展开 Docker 安装步骤</strong></summary>
+```bash
+# 1. 克隆代码仓库
+git clone https://github.com/YourOrg/DramaAI.git
+cd DramaAi
 
-克隆源码后，在仓库根目录执行：
+# 2. 安装项目依赖
+bun install
 
-```sh
-git clone https://github.com/HBAI-Ltd/Toonflow-app.git
-cd Toonflow-app
+# 3. 运行桌面客户端开发模式
+bun run dev:desktop
+
+# 或运行 Web + Server 服务端模式
+bun run dev:server
+```
+
+桌面构建完成后，亦可通过以下命令打包桌面安装包：
+
+```bash
+bun run package:desktop
+```
+
+---
+
+### 5.3 Docker 部署（可选服务端模式）
+
+若希望将 DramaAI 部署于私有服务器或远程 NAS：
+
+```bash
+# 构建并启动服务
 docker compose up -d --build
+
+# 访问本地 Web 创作端
+http://127.0.0.1:3000
 ```
 
-首次构建会安装依赖并编译内置节点、工具、Web 与 Server。启动后访问 `http://127.0.0.1:3000`；远程主机可按下方“访问与数据说明”通过 SSH 隧道访问。首次启动会初始化内置插件，并提供 `myProject` 工作目录。
-
-配置、插件和项目文件保存在 Docker 命名卷 `toonflowData` 中，挂载至容器的 `/app/data/`。卷的实际名称带有 Compose 项目前缀；停止或重建容器会保留数据，**请勿使用 `docker compose down -v`，该命令会删除数据卷**。
-
-```sh
-docker compose logs -f toonflow  # 查看日志
-docker compose stop             # 停止服务
-docker compose start            # 再次启动
-docker compose down             # 删除容器，保留数据卷
-```
-
-需要增加项目目录时，可在页面的“选择服务器工作目录”弹窗中点击“新建文件夹”。弹窗也支持文件和文件夹的重命名、删除。也可在服务运行期间通过命令行创建：
-
-```sh
-docker compose exec toonflow mkdir -p /app/data/workspaces/newProject
-```
-
-备份时先停止服务，复制完成后再启动：
-
-```sh
-docker compose stop
-docker compose cp toonflow:/app/data ./toonflowBackup
-docker compose start
-```
-
-</details>
+配置与项目资产将持久化挂载于 Docker 数据卷 `toonflowData`（`/app/data/`）。
 
 ---
 
-### 4.3 服务器安装
+## 6. 🎬 作品案例参考
 
-适用于直接在 Linux 服务器上运行 Web 与 Server。以下以 Ubuntu / Debian 为例，使用项目指定的 [Bun 1.4.3](https://bun.sh/docs/installation)。
-
-<details>
-<summary><strong>展开服务器安装步骤</strong></summary>
-
-安装运行环境：
-
-```sh
-sudo apt-get update
-sudo apt-get install -y git curl unzip ffmpeg
-curl -fsSL https://bun.com/install | bash -s "bun-v1.4.3"
-export PATH="$HOME/.bun/bin:$PATH"
-bun --version
-```
-
-克隆源码并启动：
-
-```sh
-git clone https://github.com/HBAI-Ltd/Toonflow-app.git
-cd Toonflow-app
-bun install --frozen-lockfile
-
-# 构建内置节点、工具、Web 与 Server
-bun run build:server
-mkdir -p data/workspaces/myProject
-bun run start:server
-```
-
-看到“服务启动成功”后，可在服务器本机访问 `http://127.0.0.1:3000`。上述命令以前台方式运行，按 `Ctrl+C` 停止；需要开机自启和进程托管时，可参考 [Bun 的 systemd 部署指南](https://bun.sh/guides/ecosystem/systemd)，将工作目录设为仓库目录，启动命令设为 Bun 的绝对路径加 `run start:server`，使用有权读写该目录的用户运行。
-
-</details>
+| 维度 | 案例实测记录 |
+| :--- | :--- |
+| **制作周期与成片** | 约 2 小时，成片约 2 分钟短剧片段。 |
+| **视频生成模型** | Seedance 2.0 / Kling / 混元 |
+| **图片生成模型** | GPT Image 2 / FLUX / SDXL (ComfyUI) |
+| **语言生成模型** | Claude Opus / DeepSeek V3 / Qwen |
+| **API 调用成本** | 约 ¥20 ~ ¥60（若关键生图采用本地 ComfyUI，成本进一步降低） |
 
 ---
 
-### 4.4 访问与数据说明
+## 7. 📜 开源许可与致谢
 
-- 当前服务使用固定端口 `3000`，业务页面与 API 没有独立登录鉴权。服务器安装时，请通过防火墙或安全组限制 `3000` 端口的访问来源；公网访问需配置带认证的反向代理。
-- 个人远程使用可在自己的电脑上执行 `ssh -N -L 3000:127.0.0.1:3000 用户名@服务器地址`，保持连接后打开 `http://127.0.0.1:3000`，无需将服务器的 `3000` 端口向公网开放。
-- 直接安装时，配置、插件与工作区默认保存在仓库的 `data/`；Docker 安装则保存在数据卷内的 `/app/data/`。迁移或备份时请完整保留。进入页面后选择服务器工作区内的 `myProject`，更多项目可在对应的 `workspaces/` 下创建子目录。
-- 两种安装方式均包含系统 FFmpeg。模型服务的 API Key 仍需在页面内配置。
+### 开源许可证
+DramaAI 遵循 [MIT 许可证](./LICENSE) 进行开源与分发。
 
----
-
-### 4.5 云平台部署
-
-合作平台 [智星云](https://www.ai-galaxy.com/) 提供官方授权的 Toonflow 商用镜像，可直接使用预装环境。具体步骤见 [镜像部署图文教程](https://mp.weixin.qq.com/s/lq9X1ovQ1_TKeXMOLgicKg?scene=1)。
-
----
-
-## 5. 🎬 作品示例
-
-https://github.com/user-attachments/assets/2d9fddac-dfdf-4640-b030-b09d7f7287e9
-
-### 案例信息
-
-| 项目           | 原仓库记录                                          |
-| -------------- | --------------------------------------------------- |
-| 制作周期与成片 | 约 2 小时，成片约 2 分钟。                          |
-| 视频模型       | Seedance 2.0                                        |
-| 图片模型       | GPT Image 2                                         |
-| 语言模型       | Claude Opus 4.6                                     |
-| 模型调用费用   | 约 ¥130，其中语言约 ¥10、视频约 ¥120、图片不足 ¥1。 |
-
-费用为该案例的记录，仅供参考，实际成本取决于模型服务、生成次数与参数。演示视频为压缩后的 480p 版本。
-
----
-
-## 6. 👨‍👩‍👧‍👦 微信交流群
-
-拉群小助手:
-
-<img src="./docs/images/qr.png" alt="Toonflow QR" height="400"/>
-
-也可以点击图标加入 Discord：
-
-[![Join our Discord](https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/67d00cf7266d2c75571aebde_Example.svg)](https://discord.gg/HEjKmpNpAZ)
-
-或点击邀请链接：[https://discord.gg/HEjKmpNpAZ](https://discord.gg/HEjKmpNpAZ)
-
----
-
-## 7. 💌 联系我们
-
-📧 邮箱：[ltlctools@outlook.com](mailto:ltlctools@outlook.com?subject=Toonflow咨询)
-
----
-
-## 8. 📜 开源许可
-
-Toonflow 采用 [MIT 许可证](./LICENSE)。第三方依赖和素材遵循各自的许可与版权声明。
-
-[![Toonflow Star History](https://api.star-history.com/svg?repos=HBAI-Ltd/Toonflow-app&type=Date)](https://www.star-history.com/#HBAI-Ltd/Toonflow-app&Date)
-
-> **不追溯条款**：v1.0.8 发布前基于 AGPL-3.0 使用的用户，继续按 AGPL-3.0 执行，v1.0.8 ~ v1.1.8 继续按 Apache-2.0 与附加协议执行，不受本协议变更约束。
-
----
-
-## 9. 🙏 致谢
-
-- **合作伙伴**：算能云、腾讯混元 3D、智星云。
-- **项目贡献者**：感谢参与代码开发、文档完善、插件分享和问题排查的所有贡献者。
-- **社区用户**：感谢持续提供反馈、分享创作成果并支持项目发展的所有用户。
-
-仰起脸笑的像满月：贡献 Codex 20x 开发算力。
-西安中星数字智能科技有限公司：贡献苹果证书签名。
-
-<p align="center"><sub>Free code signing provided by <a href="https://signpath.io/">SignPath.io</a>, certificate by <a href="https://signpath.org/">SignPath Foundation</a>.</sub></p>
+### 溯源与致谢
+- **上游基础**：本项目基于优秀开源项目 [Toonflow](https://github.com/HBAI-Ltd/Toonflow-app) 进行二次开发与独立维护，严格遵循原项目 MIT 开源许可证。在此对原作者团队及所有社区贡献者致以崇高的敬意与感谢。
+- **生态技术**：感谢 Bun、Electrobun、Vue 3、ComfyUI、ThorVG 及广大开源生态为本项目提供的坚实基石。
 
 <div align="center">
 
-Copyright © 2026 北京爱阿科技有限公司
+Copyright © 2026 DramaAI Team. All rights reserved.
 
 </div>
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=90&section=footer" alt="Toonflow 页脚" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=90&section=footer" alt="DramaAI 页脚" width="100%" />

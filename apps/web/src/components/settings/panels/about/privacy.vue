@@ -8,7 +8,7 @@
           aria-label="匿名使用统计"
           @change="(value) => settings.privacy = { ...privacySettings, dataCollectionEnabled: value === true }" />
       </div>
-      <p class="description">帮助我们了解常用功能，改进使用体验。默认开启，可随时关闭。</p>
+      <p class="description">帮助我们了解常用功能，改进使用体验。默认关闭，可随时开启或关闭。</p>
     </section>
 
     <section class="settingSection" aria-labelledby="metricsTitle">

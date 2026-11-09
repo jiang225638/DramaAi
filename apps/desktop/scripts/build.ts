@@ -70,6 +70,7 @@ if (isWindows) {
   const csc = resolve(process.env.WINDIR!, "Microsoft.NET/Framework64/v4.0.30319/csc.exe");
   // ACT: .NET Framework 4.8.1 的 AnyCPU 助手在 ARM64 原生运行，安装器检查该运行时。
   const helperPlatform = `/platform:${process.arch === "arm64" ? "anycpu" : "x64"}`;
+  const winIconFlag = `/win32icon:${resolve(projectDir, desktopConfig.build.win.icon)}`;
   const version = desktopConfig.app.version;
   if (!/^\d+\.\d+\.\d+$/.test(version) || version.split(".").some(part => Number(part) > 65534)) {
     throw new Error("Windows 版本号必须为 X.Y.Z，每段不超过 65534。");
@@ -89,11 +90,11 @@ if (isWindows) {
     "",
   ].join("\n"));
   await prepareRuntime();
-  await $`${csc} /nologo /target:winexe ${helperPlatform} /optimize+ /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /reference:System.IO.Compression.dll /reference:System.IO.Compression.FileSystem.dll /out:${resolve(protocolDir, "runtimeDownloader.exe")} ${assemblyInfo} ${resolve(projectDir, "build/desktop/runtime/runtimeConfig.cs")} ${resolve(projectDir, "apps/desktop/native/runtimeDownloader.cs")}`;
-  await $`${csc} /nologo /target:winexe ${helperPlatform} /optimize+ /reference:System.Windows.Forms.dll /out:${resolve(protocolDir, "startupLauncher.exe")} ${assemblyInfo} ${resolve(projectDir, "apps/desktop/native/startupLauncher.cs")}`;
-  await $`${csc} /nologo /target:winexe ${helperPlatform} /optimize+ /reference:System.Windows.Forms.dll /reference:System.Web.Extensions.dll /out:${resolve(protocolDir, "protocolLauncher.exe")} ${assemblyInfo} ${resolve(projectDir, "apps/desktop/native/protocolLauncher.cs")}`;
-  await $`${csc} /nologo /target:winexe ${helperPlatform} /optimize+ /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /out:${resolve(protocolDir, "saveFileDialog.exe")} ${assemblyInfo} ${resolve(projectDir, "apps/desktop/native/saveFileDialog.cs")}`;
-  await $`${csc} /nologo /target:winexe ${helperPlatform} /optimize+ /reference:System.Web.Extensions.dll /reference:System.Windows.Forms.dll /reference:Microsoft.CSharp.dll /out:${resolve(protocolDir, "updateHelper.exe")} ${assemblyInfo} ${resolve(projectDir, "apps/desktop/native/updateHelper.cs")}`;
+  await $`${csc} /nologo /target:winexe ${helperPlatform} ${winIconFlag} /optimize+ /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /reference:System.IO.Compression.dll /reference:System.IO.Compression.FileSystem.dll /out:${resolve(protocolDir, "runtimeDownloader.exe")} ${assemblyInfo} ${resolve(projectDir, "build/desktop/runtime/runtimeConfig.cs")} ${resolve(projectDir, "apps/desktop/native/runtimeDownloader.cs")}`;
+  await $`${csc} /nologo /target:winexe ${helperPlatform} ${winIconFlag} /optimize+ /reference:System.Windows.Forms.dll /out:${resolve(protocolDir, "startupLauncher.exe")} ${assemblyInfo} ${resolve(projectDir, "apps/desktop/native/startupLauncher.cs")}`;
+  await $`${csc} /nologo /target:winexe ${helperPlatform} ${winIconFlag} /optimize+ /reference:System.Windows.Forms.dll /reference:System.Web.Extensions.dll /out:${resolve(protocolDir, "protocolLauncher.exe")} ${assemblyInfo} ${resolve(projectDir, "apps/desktop/native/protocolLauncher.cs")}`;
+  await $`${csc} /nologo /target:winexe ${helperPlatform} ${winIconFlag} /optimize+ /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /out:${resolve(protocolDir, "saveFileDialog.exe")} ${assemblyInfo} ${resolve(projectDir, "apps/desktop/native/saveFileDialog.cs")}`;
+  await $`${csc} /nologo /target:winexe ${helperPlatform} ${winIconFlag} /optimize+ /reference:System.Web.Extensions.dll /reference:System.Windows.Forms.dll /reference:Microsoft.CSharp.dll /out:${resolve(protocolDir, "updateHelper.exe")} ${assemblyInfo} ${resolve(projectDir, "apps/desktop/native/updateHelper.cs")}`;
   // ACT: 在 SDK 生成归档、Hash 和增量补丁前签名，避免签名后破坏更新基线。
   if (mode !== "dev") {
     await signWindows(["startupLauncher.exe", "protocolLauncher.exe", "saveFileDialog.exe", "updateHelper.exe", "runtimeDownloader.exe"].map(name => resolve(protocolDir, name)));
@@ -146,6 +147,7 @@ const devBunBin = resolve(devAppDir, "bin/bun.exe");
 if (isWindows && mode === "dev" && existsSync(devBunBin)) {
   console.log("正在同步桌面端资源并启动 DramaAI...");
   const appResourcesDir = resolve(devAppDir, "Resources/app");
+  cpSync(resolve(projectDir, desktopConfig.build.win.icon), resolve(devAppDir, "Resources/app.ico"));
   const mainBuild = await Bun.build({
     entrypoints: [resolve(projectDir, desktopConfig.build.bun.entrypoint)],
     outdir: resolve(appResourcesDir, "bun"),
@@ -163,6 +165,13 @@ if (isWindows && mode === "dev" && existsSync(devBunBin)) {
     "build/ext",
     "build/desktop/ffmpeg/ffmpegWorker.js",
     "build/desktop/sandbox/sandboxProcess.js",
+    "build/desktop/startup/windowsSplashWorker.js",
+    "packages/startup/assets/startup.json",
+    "build/desktop/protocol/startupLauncher.exe",
+    "build/desktop/protocol/protocolLauncher.exe",
+    "build/desktop/protocol/saveFileDialog.exe",
+    "build/desktop/protocol/updateHelper.exe",
+    "build/desktop/protocol/runtimeDownloader.exe",
   ]);
   for (const [srcRel, destRel] of Object.entries(desktopConfig.build.copy)) {
     const srcPath = resolve(projectDir, srcRel);

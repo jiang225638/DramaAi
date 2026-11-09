@@ -1,4 +1,5 @@
 import { dlopen, ptr, toArrayBuffer, type Pointer } from "bun:ffi";
+import { resolve } from "node:path";
 import { createSplashPlayer } from "./splashPlayer";
 
 export function showWindowsSplash(assetDir: string, onClose: () => void) {
@@ -6,6 +7,10 @@ export function showWindowsSplash(assetDir: string, onClose: () => void) {
     CreateWindowExW: { args: ["u32", "ptr", "ptr", "u32", "i32", "i32", "i32", "i32", "u64", "u64", "u64", "ptr"], returns: "u64" },
     GetDpiForWindow: { args: ["u64"], returns: "u32" },
     GetSystemMetrics: { args: ["i32"], returns: "i32" },
+    GetSystemMetricsForDpi: { args: ["i32", "u32"], returns: "i32" },
+    LoadImageW: { args: ["ptr", "ptr", "u32", "i32", "i32", "u32"], returns: "u64" },
+    SendMessageW: { args: ["u64", "u32", "u64", "u64"], returns: "u64" },
+    DestroyIcon: { args: ["u64"], returns: "i32" },
     SetWindowPos: { args: ["u64", "u64", "i32", "i32", "i32", "i32", "u32"], returns: "i32" },
     UpdateLayeredWindow: { args: ["u64", "u64", "ptr", "ptr", "u64", "ptr", "u32", "ptr", "u32"], returns: "i32" },
     PeekMessageW: { args: ["ptr", "u64", "u32", "u32", "u32"], returns: "i32" },
@@ -24,12 +29,13 @@ export function showWindowsSplash(assetDir: string, onClose: () => void) {
   });
   const native = user32.symbols;
   const dialogClass = Buffer.from("#32770\0", "utf16le");
-  const windowTitle = Buffer.from("Toonflow 启动中\0", "utf16le");
+  const windowTitle = Buffer.from("DramaAI 启动中\0", "utf16le");
   // ACT: 固定主显示器上的 Windows x64 原生动画窗口；不创建第二个 WebView。
   // WS_EX_LAYERED | WS_EX_APPWINDOW + WS_POPUP | WS_SYSMENU：透明无边框，任务栏保留关闭入口。
   const window = native.CreateWindowExW(0xc0000, ptr(dialogClass), ptr(windowTitle), 0x80080000, 0, 0, 400, 160, 0, 0, 0, null);
   let player: ReturnType<typeof createSplashPlayer> | undefined;
   let messageTimer: ReturnType<typeof setInterval> | undefined;
+  let icons: bigint[] = [];
   let dc = 0n;
   let bitmap = 0n;
   let previousBitmap = 0n;
@@ -46,6 +52,7 @@ export function showWindowsSplash(assetDir: string, onClose: () => void) {
     if (bitmap) gdi32.symbols.DeleteObject(bitmap);
     if (dc) gdi32.symbols.DeleteDC(dc);
     if (window && native.IsWindow(window)) native.DestroyWindow(window);
+    for (const icon of icons) if (icon) native.DestroyIcon(icon);
     user32.close();
     gdi32.close();
     finishAnimation();
@@ -65,7 +72,13 @@ export function showWindowsSplash(assetDir: string, onClose: () => void) {
     } finally {
       kernel32.close();
     }
-    const scale = native.GetDpiForWindow(window) / 96;
+    const dpi = native.GetDpiForWindow(window);
+    const iconPath = Buffer.from(`${resolve(assetDir, "../../app.ico")}\0`, "utf16le");
+    icons = [49, 11].map((metric) => native.LoadImageW(
+      null, ptr(iconPath), 1, native.GetSystemMetricsForDpi(metric, dpi), native.GetSystemMetricsForDpi(metric + 1, dpi), 0x10,
+    ));
+    icons.forEach((icon, type) => { if (icon) native.SendMessageW(window, 0x80, BigInt(type), icon); });
+    const scale = dpi / 96;
     const width = Math.round(400 * scale), height = Math.round(160 * scale);
     native.SetWindowPos(window, 0, Math.round((native.GetSystemMetrics(0) - width) / 2), Math.round((native.GetSystemMetrics(1) - height) / 2), width, height, 0x14);
     dc = gdi32.symbols.CreateCompatibleDC(0);
