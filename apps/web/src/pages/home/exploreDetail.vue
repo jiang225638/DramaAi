@@ -3,7 +3,7 @@
     <div class="projectDetail">
       <div class="videoStage" :class="{ videoReady: detail?.videoUrl && !videoFailed }">
         <div class="viewerNavigation">
-          <button class="returnButton" type="button" :disabled="cloning" @click="emit('close')"><icon-arrow-left :size="17" aria-hidden="true" /><span>返回探索</span></button>
+          <button class="returnButton" type="button" :disabled="cloning" @click="emit('close')"><icon-arrow-left :size="17" aria-hidden="true" /><span>返回示例</span></button>
           <button class="closeButton" type="button" :disabled="cloning" aria-label="关闭作品详情" @click="emit('close')"><icon-x :size="18" aria-hidden="true" /></button>
         </div>
         <div v-if="loading" class="detailLoading" role="status" aria-live="polite">正在加载作品…</div>
@@ -27,9 +27,6 @@
             <span>{{ detail.author.name }}</span>
           </div>
           <div class="projectActions">
-            <div class="socialActions">
-              <el-button text :icon="IconShare" :loading="sharing" @click="shareProject">分享</el-button>
-            </div>
             <el-button class="processButton" type="primary" :icon="IconTopologyStar3" :loading="processLoading" @click="showProcess">查看制作过程</el-button>
           </div>
         </div>
@@ -54,10 +51,9 @@ import axios from "axios";
 import { t, translate } from "@toonflow/i18n/vue";
 import { onBeforeUnmount, ref, shallowRef, watch } from "vue";
 import { ElMessage } from "element-plus";
-import { IconArrowLeft, IconShare, IconTopologyStar3, IconCopy, IconX } from "@tabler/icons-vue";
+import { IconArrowLeft, IconTopologyStar3, IconCopy, IconX } from "@tabler/icons-vue";
 import type { ExploreDetail, ExploreProcess } from "@toonflow/server/channel";
 import http from "@/lib/http";
-import { writeClipboardText } from "@/lib/clipboard";
 import useWorkspaceFiles from "@/lib/workspaceFiles";
 import { useWorkspaceStore } from "@/stores/workspace";
 import videoPlayer from "@/components/videoPlayer.vue";
@@ -74,7 +70,6 @@ const process = shallowRef<ExploreProcess>();
 const loading = ref(false);
 const loadError = ref("");
 const actionError = ref("");
-const sharing = ref(false);
 const processLoading = ref(false);
 const processVisible = ref(false);
 const cloning = ref(false);
@@ -106,20 +101,6 @@ async function loadDetail() {
     if (!signal.aborted) loadError.value = errorMessage(error, "加载作品详情失败");
   } finally {
     if (!signal.aborted) loading.value = false;
-  }
-}
-
-async function shareProject() {
-  if (!detail.value || sharing.value) return;
-  sharing.value = true;
-  actionError.value = "";
-  try {
-    await writeClipboardText(detail.value.shareUrl);
-    ElMessage.success("分享链接已复制");
-  } catch (error) {
-    actionError.value = errorMessage(error, "复制分享链接失败");
-  } finally {
-    sharing.value = false;
   }
 }
 
@@ -276,16 +257,6 @@ onBeforeUnmount(() => controller.abort());
         gap: 16px;
         margin-left: auto;
 
-        .socialActions {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 2px;
-          padding-right: 16px;
-          border-right: 1px solid var(--el-border-color-lighter);
-
-          .el-button { height: 36px; margin: 0; padding: 0 10px; border-radius: var(--ui-radius-large); }
-        }
-
         .processButton { height: 40px; margin: 0; padding: 0 18px; border-radius: var(--ui-radius-large); }
       }
     }
@@ -307,10 +278,8 @@ onBeforeUnmount(() => controller.abort());
       .projectTitle { font-size: 19px; }
       .detailActions .projectActions {
         width: 100%;
-        justify-content: space-between;
+        justify-content: flex-end;
         gap: 12px;
-
-        .socialActions { padding-right: 0; border-right: 0; }
       }
     }
   }
