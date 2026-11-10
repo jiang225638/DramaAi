@@ -11,7 +11,7 @@ export default {
   app: {
     name: "DramaAI",
     identifier: "local.toonflow.desktop",
-    version: process.env.appVersion ?? "2.0.0",
+    version: process.env.appVersion ?? "2.2.0",
     urlSchemes: ["toonflow"],
   },
   build: {
