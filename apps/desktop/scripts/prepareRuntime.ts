@@ -24,10 +24,20 @@ export default function prepareRuntime() {
     || ![entry.archiveSha256, entry.executableSha256].every(value => /^[a-f0-9]{64}$/.test(value))) {
     throw new Error(`缺少经过核对的必要运行时元数据：${target}。`);
   }
-  const dependencies = JSON.parse(readFileSync(resolve(projectDirectory, ".hutch/dependencies.lock"), "utf8")) as {
-    objects: { type: string; toolchain?: string; platform: string; version: string }[];
-  };
-  const runtime = dependencies.objects.find(item => item.type === "toolchain" && item.toolchain === "bun" && item.platform === target);
+  const dependenciesPath = resolve(projectDirectory, ".hutch/dependencies.lock");
+  let dependencies: { objects: { type: string; toolchain?: string; platform: string; version: string }[] } | undefined;
+  try {
+    dependencies = JSON.parse(readFileSync(dependenciesPath, "utf8"));
+  } catch {}
+  let runtime = dependencies?.objects.find(item => item.type === "toolchain" && item.toolchain === "bun" && item.platform === target);
+  if (!runtime || runtime.version !== catalog.version) {
+    console.log("正在自动同步 Electrobun 运行时依赖...");
+    Bun.spawnSync([process.execPath, "apps/desktop/node_modules/electrobun/bin/electrobun.cjs", "prepare"], { cwd: projectDirectory, stdout: "inherit", stderr: "inherit" });
+    try {
+      dependencies = JSON.parse(readFileSync(dependenciesPath, "utf8"));
+      runtime = dependencies?.objects.find(item => item.type === "toolchain" && item.toolchain === "bun" && item.platform === target);
+    } catch {}
+  }
   if (runtime?.version !== catalog.version) throw new Error(`Bun 托管版本与下载校验清单不一致（${target}），请核对 SDK 与 runtimeInfo.json。`);
   const archiveName = `bun-${platform === "macos" ? "darwin" : platform}-${process.arch === "arm64" ? "aarch64" : "x64"}`;
   const archiveUrl = `https://github.com/oven-sh/bun/releases/download/bun-v${catalog.version}/${archiveName}.zip`;
