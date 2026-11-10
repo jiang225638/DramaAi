@@ -127,7 +127,7 @@ jobs:
     env:
       appVersion: ${{ needs.prepare.outputs.version }}
       releaseMode: ${{ inputs.generatePatch && '--auto' || '--initial' }}
-      macCodesign: ${{ matrix.platform == 'darwin' && '1' || '0' }}
+      macCodesign: ${{ matrix.platform == 'darwin' && secrets.MACOS_CERTIFICATE_BASE64 != '' && '1' || '0' }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -201,7 +201,7 @@ jobs:
           androidRelease: ${{ inputs.androidRelease && '1' || '0' }}
         run: bun run --cwd apps/mobile build
       - name: 准备 macOS 签名与公证凭据
-        if: matrix.platform == 'darwin'
+        if: matrix.platform == 'darwin' && env.macCodesign == '1'
         id: signing
         env:
           certificateBase64: ${{ secrets.MACOS_CERTIFICATE_BASE64 }}
@@ -253,7 +253,7 @@ jobs:
           printf 'identity=%s\n' "$identity" >> "$GITHUB_OUTPUT"
           printf 'notarizationKeyPath=%s\n' "$notarizationKeyPath" >> "$GITHUB_OUTPUT"
       - name: 为 Apple 公证票据网络错误启用有限重试
-        if: matrix.platform == 'darwin'
+        if: matrix.platform == 'darwin' && env.macCodesign == '1'
         run: |
           bun -e '
           import { chmodSync, mkdirSync, readFileSync, writeFileSync } from "@toonflow/file";
