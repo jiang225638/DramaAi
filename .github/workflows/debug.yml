@@ -22,6 +22,10 @@ on:
         description: Android 发布模式（R8 与资源裁剪，关闭调试，使用默认签名）
         type: boolean
         default: false
+      publishRelease:
+        description: 自动发布到 GitHub Releases 页面
+        type: boolean
+        default: true
   workflow_call:
     inputs:
       target:
@@ -37,6 +41,9 @@ on:
         type: boolean
         default: false
       androidRelease:
+        type: boolean
+        default: false
+      publishRelease:
         type: boolean
         default: false
     secrets:
@@ -64,7 +71,7 @@ on:
         value: ${{ jobs.prepare.outputs.commit }}
 
 permissions:
-  contents: read
+  contents: write
 
 defaults:
   run:
@@ -371,3 +378,12 @@ jobs:
           artifactTarget: ${{ matrix.target }}
         run: |
           printf '[下载 DramaAI %s · %s](%s)\n' "$appVersion" "$artifactTarget" "$artifactUrl" >> "$GITHUB_STEP_SUMMARY"
+      - name: 自动发布到 GitHub Releases
+        if: inputs.publishRelease
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: v${{ needs.prepare.outputs.version }}
+          name: DramaAI v${{ needs.prepare.outputs.version }}
+          make_latest: true
+          generate_release_notes: true
+          files: ${{ matrix.releaseFolder }}/${{ needs.prepare.outputs.version }}/*
