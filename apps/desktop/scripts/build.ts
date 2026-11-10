@@ -103,6 +103,19 @@ if (isWindows) {
 // ACT: 开发套件随插件内置，清理旧版宿主 SDK 缓存，不改动已安装的用户工具。
 rmSync(resolve(projectDir, "build/desktop/pluginSdk"), { recursive: true, force: true });
 // ACT: 团队暂不打包；恢复时也在 package.json 的 dev:plugins 中加回 --filter './packages/teams/*'。
+function copyPrebuiltPlugins() {
+  const builtinRoot = resolve(projectDir, "packages/builtin");
+  for (const group of ["tools", "nodes", "ext"]) {
+    const sourceDir = resolve(builtinRoot, group);
+    const targetDir = resolve(projectDir, "build", group);
+    if (!existsSync(sourceDir)) continue;
+    mkdirSync(targetDir, { recursive: true });
+    for (const file of readdirSync(sourceDir, { withFileTypes: true })) {
+      if (!file.isFile()) continue;
+      cpSync(resolve(sourceDir, file.name), resolve(targetDir, file.name), { force: true });
+    }
+  }
+}
 if (mode === "dev") {
   await $`${process.execPath} run dev:plugins`.cwd(projectDir);
 } else {
@@ -118,6 +131,7 @@ if (mode === "dev") {
     }
   }
 }
+copyPrebuiltPlugins();
 await $`${process.execPath} run build`.cwd(resolve(projectDir, "apps/web"));
 await $`${process.execPath} run build`.cwd(resolve(projectDir, "packages/mcp"));
 const agentDirectory = dirname(realpathSync(Bun.resolveSync("@earendil-works/pi-coding-agent", resolve(projectDir, "apps/server"))));
