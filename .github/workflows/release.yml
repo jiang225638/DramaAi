@@ -4,6 +4,11 @@ run-name: Release DramaAI ${{ github.event_name == 'push' && github.ref_name || 
 on:
   workflow_dispatch:
     inputs:
+      target:
+        description: 构建平台
+        type: choice
+        default: all
+        options: [all, windowsX64, macArm64, macX64, linuxX64, linuxArm64, androidArm64]
       version:
         description: 发布版本号（X.Y.Z）
         type: string
@@ -16,7 +21,7 @@ on:
       - "v*"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: dramaai-release
@@ -24,14 +29,17 @@ concurrency:
 
 jobs:
   build:
-    name: 构建所有平台版本
+    name: 构建安装包
     uses: ./.github/workflows/debug.yml
+    permissions:
+      contents: write
     with:
-      target: all
+      target: ${{ inputs.target || 'all' }}
       ref: ${{ inputs.ref || github.sha }}
       version: ${{ inputs.version || github.ref_name }}
       generatePatch: true
       androidRelease: true
+      publishRelease: false
     secrets:
       MACOS_CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE_BASE64 }}
       MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
@@ -86,20 +94,21 @@ jobs:
 
           const files = readdirSync("artifacts");
           const version = process.env.releaseVersion;
-          const findInstaller = (label, matches) => {
-            const names = files.filter(matches);
-            if (names.length !== 1) throw new Error(`${label} 安装包数量应为 1，实际为 ${names.length}`);
-            return names[0];
-          };
-          const windows = findInstaller("Windows x64", name => name === `DramaAI-${version}-Setup.exe`);
-          const windowsArm = findInstaller("Windows ARM64", name => name === `DramaAI-${version}-win-arm64-Setup.exe`);
-          const macArm = findInstaller("macOS ARM64", name => name === `DramaAI-${version}-macos-arm64.dmg`);
-          const macIntel = findInstaller("macOS x64", name => name === `DramaAI-${version}-macos-x64.dmg`);
-          const linux = findInstaller("Linux x64", name => name === `DramaAI-${version}-linux-x64.deb`);
-          const linuxArm = findInstaller("Linux ARM64", name => name === `DramaAI-${version}-linux-arm64.deb`);
-          const android = findInstaller("Android ARM64", name => name === `DramaAI-${version}-android-arm64.apk`);
           const baseUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/releases/download/v${version}`;
           const download = name => `${baseUrl}/${encodeURIComponent(name)}`;
+          const tableRows = [];
+          const checkInstaller = (label, device, matches) => {
+            const match = files.find(matches);
+            if (match) tableRows.push(`| ${device} | [⬇️ 下载 ${label}](${download(match)}) |`);
+          };
+          checkInstaller("Windows x64 安装包", "💻 Windows（Intel / AMD，x64）", name => name === `DramaAI-${version}-Setup.exe`);
+          checkInstaller("Windows ARM64 安装包", "💻 Windows（ARM64）", name => name === `DramaAI-${version}-win-arm64-Setup.exe`);
+          checkInstaller("M 系列 Mac 安装包", "🍎 Mac（M 系列芯片）", name => name === `DramaAI-${version}-macos-arm64.dmg`);
+          checkInstaller("Intel Mac 安装包", "🍎 Mac（Intel 芯片）", name => name === `DramaAI-${version}-macos-x64.dmg`);
+          checkInstaller("Linux x64 DEB", "🐧 Linux（Intel / AMD，x64）", name => name === `DramaAI-${version}-linux-x64.deb`);
+          checkInstaller("Linux ARM64 DEB", "🐧 Linux（ARM64）", name => name === `DramaAI-${version}-linux-arm64.deb`);
+          checkInstaller("Android APK", "📱 Android（ARM64，Android 8 及以上）", name => name === `DramaAI-${version}-android-arm64.apk`);
+
           writeFileSync("releaseBody.md", [
             "## 📦 下载指南",
             "",
@@ -107,13 +116,7 @@ jobs:
             "",
             "| 你的设备 | 下载 |",
             "| --- | --- |",
-            `| 💻 Windows（Intel / AMD，x64） | [⬇️ 下载 Windows x64 安装包](${download(windows)}) |`,
-            `| 💻 Windows（ARM64） | [⬇️ 下载 Windows ARM64 安装包](${download(windowsArm)}) |`,
-            `| 🍎 Mac（M 系列芯片） | [⬇️ 下载 M 系列 Mac 安装包](${download(macArm)}) |`,
-            `| 🍎 Mac（Intel 芯片） | [⬇️ 下载 Intel Mac 安装包](${download(macIntel)}) |`,
-            `| 🐧 Linux（Intel / AMD，x64） | [⬇️ 下载 Linux x64 DEB](${download(linux)}) |`,
-            `| 🐧 Linux（ARM64） | [⬇️ 下载 Linux ARM64 DEB](${download(linuxArm)}) |`,
-            `| 📱 Android（ARM64，Android 8 及以上） | [⬇️ 下载 Android APK](${download(android)}) |`,
+            ...(tableRows.length ? tableRows : ["| 暂无独立安装包 | 请直接查看下方附件列表 |"]),
             "",
             "> 💡 手动安装请选择上表中的链接。下方其他文件供软件自动更新使用。",
             "",
