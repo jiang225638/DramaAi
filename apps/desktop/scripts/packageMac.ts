@@ -1,4 +1,4 @@
-import { lstatSync, mkdirSync, mkdtempSync, realpathSync, renameSync, rmSync, symlink } from "@toonflow/file";
+import { existsSync, lstatSync, mkdirSync, mkdtempSync, realpathSync, renameSync, rmSync, symlink } from "@toonflow/file";
 import { file, write } from "@toonflow/file/bun";
 import { join, resolve } from "node:path";
 import desktopConfig from "../../../electrobun.config";
@@ -11,9 +11,39 @@ if (process.env.TOONFLOW_EXTERNAL_RUNTIME === "1") {
   throw new Error("DMG 暂不支持外置运行时试验；原 PKG 实现已备份至 packageMacPkg.ts，正式构建继续内置 Bun。");
 }
 
+const hdiutilBusyPattern = /Resource busy|Resource temporarily unavailable/i;
+
 async function run(command: string[]) {
   const child = Bun.spawn(command, { stdin: "ignore", stdout: "inherit", stderr: "inherit", timeout: 600000 });
   if (await child.exited !== 0) throw new Error(`macOS 安装包制作失败：${command[0]}`);
+}
+
+// ACT: macOS 15 ARM64 运行器上 Spotlight/XProtect 可能短暂锁定新写入的镜像或临时卷导致 Resource busy，失败时清理半成品并退避重试。
+async function runHdiutil(args: string[], onRetry?: () => void) {
+  const maxAttempts = 5;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const child = Bun.spawn(["/usr/bin/hdiutil", ...args], {
+      stdin: "ignore",
+      stdout: "pipe",
+      stderr: "pipe",
+      timeout: 600000,
+    });
+    const [code, stdout, stderr] = await Promise.all([
+      child.exited,
+      new Response(child.stdout).text(),
+      new Response(child.stderr).text(),
+    ]);
+    if (stdout) process.stdout.write(stdout);
+    if (stderr) process.stderr.write(stderr);
+    if (code === 0) return;
+    const detail = `${stderr}\n${stdout}`.trim();
+    if (!hdiutilBusyPattern.test(detail) || attempt === maxAttempts) {
+      throw new Error(`macOS 安装包制作失败：/usr/bin/hdiutil${detail ? `\n${detail}` : ""}`);
+    }
+    onRetry?.();
+    console.error(`macOS 磁盘镜像工具遇到临时资源占用，${attempt * 5} 秒后重试（${attempt}/${maxAttempts - 1}）：hdiutil ${args[0] ?? ""}`);
+    await Bun.sleep(attempt * 5000);
+  }
 }
 
 const projectDir = realpathSync(resolve(import.meta.dirname, "../../.."));
@@ -68,12 +98,21 @@ try {
     if (process.env.ELECTROBUN_SKIP_NOTARIZATION !== "1") await run(["xcrun", "stapler", "validate", appPath]);
   }
 
+  await write(join(stagingDir, ".metadata_never_index"), "");
   await symlink("/Applications", join(applicationDir, "Applications"));
   const output = join(stagingDir, outputName);
+  const mountedVolume = join("/Volumes", desktopConfig.app.name);
   // ACT: 直接创建只读压缩镜像，无 Finder、挂载或卸载依赖，适用于无桌面的 CI 运行器。
-  await run(["/usr/bin/hdiutil", "create", "-volname", desktopConfig.app.name, "-srcfolder", applicationDir,
-    "-fs", "HFS+", "-format", "UDZO", output]);
-  await run(["/usr/bin/hdiutil", "verify", output]);
+  await runHdiutil(
+    ["create", "-volname", desktopConfig.app.name, "-srcfolder", applicationDir, "-fs", "HFS+", "-format", "UDZO", "-ov", output],
+    () => {
+      rmSync(output, { force: true });
+      if (process.env.CI && existsSync(mountedVolume)) {
+        Bun.spawnSync(["/usr/bin/hdiutil", "detach", mountedVolume, "-force"], { stdin: "ignore", stdout: "ignore", stderr: "ignore" });
+      }
+    },
+  );
+  await runHdiutil(["verify", output]);
   if (signed) {
     await run(["/usr/bin/codesign", "--force", "--timestamp", "--sign", identity!, output]);
     await run(["/usr/bin/codesign", "--verify", "--strict", "--verbose=2", output]);

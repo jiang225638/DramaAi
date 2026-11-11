@@ -332,8 +332,25 @@ jobs:
           fi
           mountDirectory="$inspectionDirectory/dmg"
           mkdir -p "$mountDirectory"
-          hdiutil attach "$dmgPath" -readonly -nobrowse -mountpoint "$mountDirectory"
-          trap 'hdiutil detach "$mountDirectory"' EXIT
+          detachDmg() {
+            for attempt in 1 2 3 4 5; do
+              if hdiutil detach "$mountDirectory"; then
+                return 0
+              fi
+              sleep $((attempt * 3))
+            done
+            hdiutil detach "$mountDirectory" -force
+          }
+          for attempt in 1 2 3 4 5; do
+            if hdiutil attach "$dmgPath" -readonly -nobrowse -mountpoint "$mountDirectory"; then
+              break
+            fi
+            if [[ $attempt -eq 5 ]]; then
+              exit 1
+            fi
+            sleep $((attempt * 3))
+          done
+          trap 'detachDmg || true' EXIT
           mountedApps=("$mountDirectory"/*.app)
           if [[ ${#mountedApps[@]} -ne 1 || "${mountedApps[0]}" != "$mountDirectory/DramaAI.app" ]]; then
             echo '::error::DMG 必须包含且仅包含一个 DramaAI.app。'
@@ -345,7 +362,7 @@ jobs:
           test -x "$app/Contents/MacOS/bun"
           test -x "$app/Contents/MacOS/launcher"
           verifyMacArtifact "$app"
-          hdiutil detach "$mountDirectory"
+          detachDmg
           trap - EXIT
       - name: 构建 Linux 安装包及更新文件
         if: matrix.platform == 'linux'
