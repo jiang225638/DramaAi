@@ -38,6 +38,74 @@ interface LicenseRecord {
   created_at: number;
 }
 
+interface ActivationRecord {
+  id: number;
+  card_key: string;
+  machine_id: string;
+  device_name: string | null;
+  platform: string | null;
+  activated_at: number;
+  last_verified_at: number;
+}
+
+function getEffectiveStatus(
+  status: LicenseRecord["status"],
+  expiresAt: number | null,
+  now = Date.now(),
+): LicenseRecord["status"] {
+  if (status === "active" && expiresAt !== null && now > expiresAt) {
+    return "expired";
+  }
+  return status;
+}
+
+function getRestoredStatus(
+  firstActivatedAt: number | null,
+  expiresAt: number | null,
+  now = Date.now(),
+): Exclude<LicenseRecord["status"], "banned"> {
+  if (firstActivatedAt === null) {
+    return "unused";
+  }
+  if (expiresAt !== null && now > expiresAt) {
+    return "expired";
+  }
+  return "active";
+}
+
+function formatLicenseRow(row: LicenseRecord & { device_count?: number }, now = Date.now()) {
+  return {
+    id: row.id,
+    cardKey: row.card_key,
+    tier: row.tier,
+    durationDays: row.duration_days,
+    maxDevices: row.max_devices,
+    status: getEffectiveStatus(row.status, row.expires_at, now),
+    rawStatus: row.status,
+    firstActivatedAt: row.first_activated_at,
+    expiresAt: row.expires_at,
+    note: row.note,
+    createdAt: row.created_at,
+    deviceCount: Number(row.device_count ?? 0),
+  };
+}
+
+function formatActivationRow(row: ActivationRecord) {
+  return {
+    id: row.id,
+    cardKey: row.card_key,
+    machineId: row.machine_id,
+    deviceName: row.device_name,
+    platform: row.platform,
+    activatedAt: row.activated_at,
+    lastVerifiedAt: row.last_verified_at,
+  };
+}
+
+function escapeLikePattern(value: string): string {
+  return value.replace(/[\\%_]/g, "\\$&");
+}
+
 const corsHeaders: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -279,13 +347,136 @@ export default {
           return jsonResponse({ code: 401, data: null, message: "未授权的管理员访问" }, 401);
         }
 
+        if (request.method === "GET" && pathname === "/admin/license/list") {
+          const page = Math.max(1, Number.parseInt(url.searchParams.get("page") || "1", 10) || 1);
+          const limit = Math.min(Math.max(1, Number.parseInt(url.searchParams.get("limit") || "20", 10) || 20), 200);
+          const keyword = (url.searchParams.get("keyword") || "").trim();
+          const statusFilter = (url.searchParams.get("status") || "all").trim();
+          const tierFilter = (url.searchParams.get("tier") || "all").trim();
+          const now = Date.now();
+          const offset = (page - 1) * limit;
+
+          const conditions: string[] = [];
+          const params: unknown[] = [];
+
+          if (keyword) {
+            const pattern = `%${escapeLikePattern(keyword)}%`;
+            conditions.push("(l.card_key LIKE ? ESCAPE '\\' OR COALESCE(l.note, '') LIKE ? ESCAPE '\\')");
+            params.push(pattern, pattern);
+          }
+
+          if (tierFilter === "lifetime" || tierFilter === "monthly" || tierFilter === "yearly") {
+            conditions.push("l.tier = ?");
+            params.push(tierFilter);
+          }
+
+          if (statusFilter === "unused" || statusFilter === "banned") {
+            conditions.push("l.status = ?");
+            params.push(statusFilter);
+          } else if (statusFilter === "expired") {
+            conditions.push("(l.status = 'expired' OR (l.status = 'active' AND l.expires_at IS NOT NULL AND l.expires_at < ?))");
+            params.push(now);
+          } else if (statusFilter === "active") {
+            conditions.push("(l.status = 'active' AND (l.expires_at IS NULL OR l.expires_at >= ?))");
+            params.push(now);
+          }
+
+          const whereSql = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+
+          const countRow = await env.DB.prepare(
+            `SELECT COUNT(*) AS total FROM licenses l ${whereSql}`,
+          ).bind(...params).first<{ total: number }>();
+
+          const listResult = await env.DB.prepare(
+            `SELECT l.*, (SELECT COUNT(*) FROM activations a WHERE a.card_key = l.card_key) AS device_count
+             FROM licenses l
+             ${whereSql}
+             ORDER BY l.id DESC
+             LIMIT ? OFFSET ?`,
+          ).bind(...params, limit, offset).all<LicenseRecord & { device_count: number }>();
+
+          const statsRow = await env.DB.prepare(
+            `SELECT
+               COUNT(*) AS total,
+               COALESCE(SUM(CASE WHEN status = 'unused' THEN 1 ELSE 0 END), 0) AS unused,
+               COALESCE(SUM(CASE WHEN status = 'banned' THEN 1 ELSE 0 END), 0) AS banned,
+               COALESCE(SUM(CASE WHEN status = 'expired' OR (status = 'active' AND expires_at IS NOT NULL AND expires_at < ?) THEN 1 ELSE 0 END), 0) AS expired,
+               COALESCE(SUM(CASE WHEN status = 'active' AND (expires_at IS NULL OR expires_at >= ?) THEN 1 ELSE 0 END), 0) AS active
+             FROM licenses`,
+          ).bind(now, now).first<{
+            total: number;
+            unused: number;
+            banned: number;
+            expired: number;
+            active: number;
+          }>();
+
+          const deviceStatsRow = await env.DB.prepare(
+            "SELECT COUNT(*) AS totalDevices FROM activations",
+          ).first<{ totalDevices: number }>();
+
+          return jsonResponse({
+            code: 200,
+            data: {
+              list: (listResult.results || []).map((row) => formatLicenseRow(row, now)),
+              total: Number(countRow?.total ?? 0),
+              page,
+              limit,
+              stats: {
+                total: Number(statsRow?.total ?? 0),
+                unused: Number(statsRow?.unused ?? 0),
+                active: Number(statsRow?.active ?? 0),
+                expired: Number(statsRow?.expired ?? 0),
+                banned: Number(statsRow?.banned ?? 0),
+                totalDevices: Number(deviceStatsRow?.totalDevices ?? 0),
+              },
+            },
+            message: "获取卡密列表成功",
+          });
+        }
+
+        if (request.method === "GET" && pathname === "/admin/license/detail") {
+          const cardKey = (url.searchParams.get("cardKey") || "").trim();
+          if (!cardKey) {
+            return jsonResponse({ code: 400, data: null, message: "请提供 cardKey" }, 400);
+          }
+
+          const license = await env.DB.prepare(
+            "SELECT * FROM licenses WHERE card_key = ?",
+          ).bind(cardKey).first<LicenseRecord>();
+          if (!license) {
+            return jsonResponse({ code: 404, data: null, message: "卡密不存在" }, 404);
+          }
+
+          const activations = await env.DB.prepare(
+            "SELECT * FROM activations WHERE card_key = ? ORDER BY activated_at DESC",
+          ).bind(cardKey).all<ActivationRecord>();
+
+          const activationList = activations.results || [];
+          return jsonResponse({
+            code: 200,
+            data: {
+              license: formatLicenseRow({ ...license, device_count: activationList.length }),
+              activations: activationList.map(formatActivationRow),
+            },
+            message: "获取卡密详情成功",
+          });
+        }
+
         if (request.method === "POST" && pathname === "/admin/license/generate") {
           const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
           const tier = body.tier === "monthly" || body.tier === "yearly" ? body.tier : "lifetime";
-          const count = Math.min(Math.max(1, Number(body.count) || 1), 100);
-          const durationDays = Number(body.durationDays) || (tier === "lifetime" ? 0 : tier === "monthly" ? 30 : 365);
-          const maxDevices = Math.max(1, Number(body.maxDevices) || (tier === "lifetime" ? 2 : 1));
-          const note = typeof body.note === "string" ? body.note.slice(0, 200) : null;
+          const count = Math.min(Math.max(1, Math.floor(Number(body.count) || 1)), 100);
+          const rawDuration = Number(body.durationDays);
+          const durationDays = tier === "lifetime"
+            ? 0
+            : Number.isFinite(rawDuration) && rawDuration > 0
+              ? Math.floor(rawDuration)
+              : tier === "monthly"
+                ? 30
+                : 365;
+          const maxDevices = Math.max(1, Math.floor(Number(body.maxDevices) || (tier === "lifetime" ? 2 : 1)));
+          const note = typeof body.note === "string" && body.note.trim() ? body.note.trim().slice(0, 200) : null;
           const now = Date.now();
 
           const generatedKeys: string[] = [];
@@ -302,6 +493,91 @@ export default {
             data: { keys: generatedKeys, count: generatedKeys.length, tier },
             message: `成功生成 ${generatedKeys.length} 个卡密`,
           });
+        }
+
+        if (request.method === "POST" && pathname === "/admin/license/update") {
+          const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+          const cardKey = typeof body.cardKey === "string" ? body.cardKey.trim() : "";
+          if (!cardKey) {
+            return jsonResponse({ code: 400, data: null, message: "请提供 cardKey" }, 400);
+          }
+
+          const license = await env.DB.prepare(
+            "SELECT * FROM licenses WHERE card_key = ?",
+          ).bind(cardKey).first<LicenseRecord>();
+          if (!license) {
+            return jsonResponse({ code: 404, data: null, message: "卡密不存在" }, 404);
+          }
+
+          const now = Date.now();
+          let nextMaxDevices = license.max_devices;
+          if (body.maxDevices !== undefined) {
+            const parsedMax = Math.floor(Number(body.maxDevices));
+            if (!Number.isFinite(parsedMax) || parsedMax < 1 || parsedMax > 100) {
+              return jsonResponse({ code: 400, data: null, message: "最大设备数须在 1 到 100 之间" }, 400);
+            }
+            nextMaxDevices = parsedMax;
+          }
+
+          let nextNote = license.note;
+          if (body.note !== undefined) {
+            nextNote = typeof body.note === "string" && body.note.trim() ? body.note.trim().slice(0, 200) : null;
+          }
+
+          let nextExpiresAt = license.expires_at;
+          if (body.expiresAt !== undefined && license.tier !== "lifetime") {
+            if (body.expiresAt === null) {
+              nextExpiresAt = null;
+            } else if (typeof body.expiresAt === "number" && Number.isFinite(body.expiresAt) && body.expiresAt > 0) {
+              nextExpiresAt = Math.floor(body.expiresAt);
+            } else {
+              return jsonResponse({ code: 400, data: null, message: "到期时间格式无效" }, 400);
+            }
+          }
+
+          let nextStatus = license.status;
+          if (body.action === "ban") {
+            nextStatus = "banned";
+          } else if (body.action === "unban") {
+            nextStatus = getRestoredStatus(license.first_activated_at, nextExpiresAt, now);
+          } else if (nextStatus !== "banned" && license.first_activated_at !== null) {
+            nextStatus = getRestoredStatus(license.first_activated_at, nextExpiresAt, now);
+          }
+
+          await env.DB.prepare(
+            "UPDATE licenses SET status = ?, max_devices = ?, note = ?, expires_at = ? WHERE id = ?",
+          ).bind(nextStatus, nextMaxDevices, nextNote, nextExpiresAt, license.id).run();
+
+          const updated = await env.DB.prepare(
+            `SELECT l.*, (SELECT COUNT(*) FROM activations a WHERE a.card_key = l.card_key) AS device_count
+             FROM licenses l
+             WHERE l.id = ?`,
+          ).bind(license.id).first<LicenseRecord & { device_count: number }>();
+
+          return jsonResponse({
+            code: 200,
+            data: updated ? formatLicenseRow(updated, now) : null,
+            message: body.action === "ban" ? "卡密已封禁" : body.action === "unban" ? "卡密已解封" : "卡密信息已更新",
+          });
+        }
+
+        if (request.method === "POST" && pathname === "/admin/license/unbindDevice") {
+          const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+          const cardKey = typeof body.cardKey === "string" ? body.cardKey.trim() : "";
+          const machineId = typeof body.machineId === "string" ? body.machineId.trim().toLowerCase() : "";
+          if (!cardKey || !machineId) {
+            return jsonResponse({ code: 400, data: null, message: "请提供 cardKey 与 machineId" }, 400);
+          }
+
+          const delResult = await env.DB.prepare(
+            "DELETE FROM activations WHERE card_key = ? AND machine_id = ?",
+          ).bind(cardKey, machineId).run();
+
+          if (!delResult.meta?.changes) {
+            return jsonResponse({ code: 404, data: null, message: "未找到该设备的绑定记录" }, 404);
+          }
+
+          return jsonResponse({ code: 200, data: null, message: "已解绑该设备" });
         }
 
         if (request.method === "POST" && pathname === "/admin/license/reset") {
