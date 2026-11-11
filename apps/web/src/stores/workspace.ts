@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import axios from "axios";
 import type { AgentAttachment } from "@/components/agent/types";
+import { settingsStorage } from "@/stores/settings";
 
 export type Project = {
   directory: string;
@@ -54,7 +55,16 @@ export const useWorkspaceStore = defineStore("workspace", () => {
   return { project, projectList, projectLoading, projectLoadingDrawn, projectLoadingVisible, pendingAgentMessage, addProject, openProject, renameProject, removeProject };
 }, {
   persist: {
-    key: "toonflow.projectList",
+    key: "dramaai.projectList",
     pick: ["project", "projectList"],
+    // ACT: 兼容迁移旧键名 toonflow.projectList，读取后清理当前来源 localStorage 中的旧副本；设置中的旧快照保留不删。
+    storage: {
+      getItem(key: string) {
+        const value = settingsStorage.getItem(key) ?? settingsStorage.getItem("toonflow.projectList");
+        try { localStorage.removeItem("toonflow.projectList"); } catch {}
+        return value;
+      },
+      setItem: settingsStorage.setItem,
+    },
   },
 });

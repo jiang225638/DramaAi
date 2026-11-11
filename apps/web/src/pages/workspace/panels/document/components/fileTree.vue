@@ -206,9 +206,9 @@ function pathIdentity(path: string) {
   const normalized = path.replaceAll("\\", "/").replace(/\/+$/, "");
   return /^(?:[a-z]:[\\/]|\\\\|\/\/)/i.test(directory.value ?? "") ? normalized.toLowerCase() : normalized;
 }
-function storageKey(workspaceDirectory = directory.value ?? "") {
+function storageKey(workspaceDirectory = directory.value ?? "", prefix = "dramaai:documentTree:") {
   const normalized = workspaceDirectory.replaceAll("\\", "/").replace(/\/+$/, "");
-  return `toonflow:documentTree:${/^(?:[a-z]:[\\/]|\\\\|\/\/)/i.test(workspaceDirectory) ? normalized.toLowerCase() : normalized}`;
+  return `${prefix}${/^(?:[a-z]:[\\/]|\\\\|\/\/)/i.test(workspaceDirectory) ? normalized.toLowerCase() : normalized}`;
 }
 function persistTreeState(workspaceDirectory = directory.value) {
   if (!workspaceDirectory) return;
@@ -219,7 +219,8 @@ function loadTreeState() {
   expandedKeys.value = [];
   if (!directory.value) return;
   try {
-    const state = JSON.parse(settingsStorage.getItem(storageKey()) ?? "{}");
+    const raw = settingsStorage.getItem(storageKey()) ?? settingsStorage.getItem(storageKey(directory.value, "toonflow:documentTree:"));
+    const state = JSON.parse(raw ?? "{}");
     if (Array.isArray(state.expandedKeys)) expandedKeys.value = state.expandedKeys.filter((key: unknown) => typeof key === "string");
   } catch { /* 无效的本地状态不影响文件读取。 */ }
 }

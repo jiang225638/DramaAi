@@ -268,9 +268,9 @@ async function loadAdvertisements() {
   if (import.meta.env.DEV && typeof preview === "string" && ["text", "image", "web", "carousel", "stack"].includes(preview)) {
     const now = Date.now();
     const previewSlides: { title: string; subtitle: string; color: string; actionType: HomeAdvertisement["actionType"]; actionTarget: string }[] = [
-      { title: "探索创作灵感", subtitle: "从一个想法，开始你的下一个作品", color: "#273442", actionType: preview === "web" ? "web" : "path", actionTarget: preview === "web" ? "https://github.com/HBAI-Ltd/Toonflow-app" : "/home?section=explore" },
+      { title: "探索创作灵感", subtitle: "从一个想法，开始你的下一个作品", color: "#273442", actionType: preview === "web" ? "web" : "path", actionTarget: preview === "web" ? "https://github.com/jiang225638/DramaAi" : "/home?section=explore" },
       { title: "搭建你的工作流", subtitle: "前往插件市场，发现更多创作工具", color: "#2c303b", actionType: "settings", actionTarget: "pluginMarket" },
-      { title: "一起创造更多", subtitle: "在 GitHub 了解 Toonflow 的新进展", color: "#243734", actionType: "web", actionTarget: "https://github.com/HBAI-Ltd/Toonflow-app" },
+      { title: "一起创造更多", subtitle: "在 GitHub 了解 DramaAI 的新进展", color: "#243734", actionType: "web", actionTarget: "https://github.com/jiang225638/DramaAi" },
     ];
     const sidebar = previewSlides.map((slide, index): HomeAdvertisement => ({
       title: slide.title,
@@ -286,7 +286,7 @@ async function loadAdvertisements() {
         <circle cx="330" cy="237" r="12" fill="#fff" opacity=".85"/>
         <path d="m495 146 25 14-25 14z" fill="#fff"/>
         <g fill="#fff" font-family="Arial, Microsoft YaHei, sans-serif">
-          <text x="40" y="58" font-size="17" letter-spacing="3" opacity=".7">TOONFLOW · PREVIEW</text>
+          <text x="40" y="58" font-size="17" letter-spacing="3" opacity=".7">DRAMAAI · PREVIEW</text>
           <text x="40" y="136" font-size="38" font-weight="bold">${slide.title}</text>
           <text x="40" y="177" font-size="19" opacity=".7">${slide.subtitle}</text>
           <text x="40" y="303" font-size="16" opacity=".6">侧栏轮播预览 · ${index + 1} / 3</text>
@@ -308,7 +308,7 @@ async function loadAdvertisements() {
       </svg>`)}`;
     const banner: HomeAdvertisement = {
       title: "创作灵感，从这里开始",
-      content: "探索 **节点与技能**，开始你的下一个作品。\n[创作灵感](/home?section=explore) · [插件市场](settings:pluginMarket) · [项目主页](https://github.com/HBAI-Ltd/Toonflow-app)",
+      content: "探索 **节点与技能**，开始你的下一个作品。\n[创作灵感](/home?section=explore) · [插件市场](settings:pluginMarket) · [项目主页](https://github.com/jiang225638/DramaAi)",
       imageUrl: preview === "image" ? bannerImage : "",
       buttonText: "发现工具",
       actionType: "settings",
@@ -537,7 +537,7 @@ async function exportProject(project: Project) {
   exportingDirectory.value = directory;
   try {
     let name = project.name.replace(/[<>:"/\\|?*\x00-\x1f\x7f-\x9f]/g, "_").slice(0, 120).replace(/[. ]+$/, "");
-    if (!name || /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(name)) name = "Toonflow";
+    if (!name || /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(name)) name = "DramaAI";
     const files = useWorkspaceFiles(directory);
     await saveFile(() => files.exportZip(pageLifetime.signal), `${name}.zip`);
   } catch (error) {

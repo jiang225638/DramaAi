@@ -90,7 +90,7 @@ try {
     "",
   ].join("\n"), { mode: 0o755 });
   await writeAtomic(join(desktopDir, "toonflow.desktop"), [
-    "[Desktop Entry]", "Version=1.0", "Type=Application", "Name=Toonflow",
+    "[Desktop Entry]", "Version=1.0", "Type=Application", "Name=DramaAI",
     "Exec=/usr/bin/toonflow %u", "Icon=toonflow", "Terminal=false", "StartupNotify=true",
     "Categories=AudioVideo;Graphics;", "MimeType=x-scheme-handler/toonflow;", "",
   ].join("\n"), { mode: 0o644 });
@@ -102,12 +102,12 @@ try {
   await writeAtomic(join(controlDir, "control"), [
     "Package: toonflow", `Version: ${version}`, "Section: graphics", "Priority: optional",
     `Architecture: ${process.arch === "x64" ? "amd64" : "arm64"}`,
-    "Maintainer: HBAI-Ltd <ltlctools@outlook.com>",
+    "Maintainer: DramaAI <noreply@github.com>",
     `Installed-Size: ${sizeKiB}`,
     "Pre-Depends: ca-certificates, curl, unzip",
     "Depends: libc6 (>= 2.39), libstdc++6, libgcc-s1, libgtk-3-0t64 | libgtk-3-0, libwebkit2gtk-4.1-0, libayatana-appindicator3-1, librsvg2-2, libpipewire-0.3-0t64 | libpipewire-0.3-0, zenity, ffmpeg, util-linux, xdg-utils",
-    "Homepage: https://github.com/HBAI-Ltd/Toonflow-app",
-    "Description: Toonflow AI creative workspace", " Local AI workflow for scripts, images and video.", "",
+    "Homepage: https://github.com/jiang225638/DramaAi",
+    "Description: DramaAI AI creative workspace", " Local AI workflow for scripts, images and video.", "",
   ].join("\n"), { mode: 0o644 });
   // ACT: 包管理器负责 /opt 内的程序升级；安装与卸载均不触碰用户目录中的项目和配置。
   const stagedOutput = join(stagingDir, outputName);

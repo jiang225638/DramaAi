@@ -91,7 +91,7 @@ try {
     writeAtomicSync(join(scriptsDir, "prepareRuntime"), `#!/bin/sh
 set -eu
 consoleUser=$(/usr/bin/stat -f '%Su' /dev/console)
-case "$consoleUser" in ''|root|loginwindow) echo '请登录 Mac 桌面后重新安装 Toonflow。' >&2; exit 1;; esac
+case "$consoleUser" in ''|root|loginwindow) echo '请登录 Mac 桌面后重新安装 DramaAI。' >&2; exit 1;; esac
 consoleUid=$(/usr/bin/id -u "$consoleUser")
 /bin/launchctl print "gui/$consoleUid" >/dev/null
 scriptDirectory=$(CDPATH= cd -- "$(/usr/bin/dirname "$0")" && pwd -P)
@@ -109,7 +109,7 @@ trap 'exit 2' HUP INT TERM
     await run(["/usr/bin/plutil", "-convert", "json", componentsPath]);
     const components = await file(componentsPath).json() as { RootRelativeBundlePath: string; BundleIsRelocatable?: boolean; BundlePreInstallScriptPath?: string; BundleInstallScriptTimeout?: number }[];
     const application = components.find(item => item.RootRelativeBundlePath === appName);
-    if (!application) throw new Error("PKG 组件清单缺少 Toonflow 应用。");
+    if (!application) throw new Error("PKG 组件清单缺少 DramaAI 应用。");
     application.BundleIsRelocatable = false;
     application.BundlePreInstallScriptPath = "prepareRuntime";
     application.BundleInstallScriptTimeout = 3600;

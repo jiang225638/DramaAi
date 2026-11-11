@@ -307,7 +307,7 @@ async function exportStorage() {
   storageMessage.value = "";
   try {
     const data = readStorage();
-    await saveFile(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }), "toonflowLocalStorage.json");
+    await saveFile(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }), "dramaaiLocalStorage.json");
   } catch (err) {
     storageError.value = err instanceof Error ? err.message : "导出缓存失败";
   }

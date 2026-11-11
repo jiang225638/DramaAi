@@ -36,8 +36,8 @@ async function notifyDesktopReady(failed = false) {
 
 // ACT: 已安装客户端的自动更新不经过 NSIS；启动时阻止缺少所需 API 的旧 WebView2 进入业务页面。
 async function initialize() {
-  if (requiresWebView2Update) throw new Error("当前 Microsoft Edge WebView2 Runtime 版本过旧。请以管理员身份运行微软最新版安装器；若仍提示已安装，请修复 WebView2 或联系管理员检查更新服务。更新完成后，请完全退出 Toonflow 再重新打开。");
-  if (requiresMobileWebViewUpdate) throw new Error("当前移动端浏览器内核缺少 Toonflow 所需能力。请更新 Toonflow 和系统浏览器内核；部分系统需要通过系统更新升级。更新完成后，请完全退出并重新打开 Toonflow。");
+  if (requiresWebView2Update) throw new Error("当前 Microsoft Edge WebView2 Runtime 版本过旧。请以管理员身份运行微软最新版安装器；若仍提示已安装，请修复 WebView2 或联系管理员检查更新服务。更新完成后，请完全退出 DramaAI 再重新打开。");
+  if (requiresMobileWebViewUpdate) throw new Error("当前移动端浏览器内核缺少 DramaAI 所需能力。请更新 DramaAI 和系统浏览器内核；部分系统需要通过系统更新升级。更新完成后，请完全退出并重新打开 DramaAI。");
   const { session, app: tenantApp } = await initializeMultiTenant();
   app = tenantApp ?? await createCreationApp(session);
   app.mount("#app");

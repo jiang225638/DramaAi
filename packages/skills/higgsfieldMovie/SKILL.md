@@ -4,8 +4,8 @@ description: 源自 Higgsfield Originals 37 个精选系列、1,954 条真实视
 metadata:
   version: "2.0.0"
   displayName: 大师级电影制作
-  author: Toonflow
-  github: https://github.com/HBAI-Ltd/Toonflow-app
+  author: DramaAI
+  github: https://github.com/jiang225638/DramaAi
 ---
 
 # 大师级电影制作

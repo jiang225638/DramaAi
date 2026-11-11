@@ -87,7 +87,7 @@ $adb = Join-Path $env:ANDROID_HOME 'platform-tools\adb.exe'
 程序资源与用户数据分开存放：更新 APK 可以替换页面和插件，不能覆盖设置、项目或生成素材。需要迁移或卸载前，应先导出需要保留的文件。
 
 ```powershell
-& $adb -s <设备序列号> logcat -s ToonflowMobile AndroidRuntime
+& $adb -s <设备序列号> logcat -s DramaAIMobile AndroidRuntime
 & $adb -s <设备序列号> shell am force-stop com.toonflow.mobile
 ```
 

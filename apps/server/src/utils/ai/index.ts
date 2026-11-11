@@ -23,7 +23,7 @@ export async function getConfiguredModel(providerId: string, modelId: string) {
   const parsed = providerSchema.safeParse(resolved?.provider ?? getConfiguredProviders().find(item => item?.id === providerId));
   if (!parsed.success) {
     const official = providerId.toLowerCase() === "toonflow";
-    throw Object.assign(new Error(official ? "请先登录 Toonflow 账号并刷新供应商" : "请先在设置中配置模型供应商"), { status: official ? 401 : 400 });
+    throw Object.assign(new Error(official ? "请先登录 DramaAI 账号并刷新供应商" : "请先在设置中配置模型供应商"), { status: official ? 401 : 400 });
   }
   const provider = parsed.data;
   const model = resolved?.model ?? provider.models.find(item => item.id === modelId);

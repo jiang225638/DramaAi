@@ -23,7 +23,7 @@ export function providePluginUpload() {
   provide(openPluginUploadKey, async (load, signal) => {
     if (pending.value || preparing) return { status: "dialogBusy" };
     const token = toonflowAccountToken.value;
-    if (!token) throw new Error(translate("请先在账号与余额中登录 Toonflow 账号"));
+    if (!token) throw new Error(translate("请先在账号与余额中登录 DramaAI 账号"));
     preparing = true;
     try {
       const { source, fileName, ...plugin } = await load();

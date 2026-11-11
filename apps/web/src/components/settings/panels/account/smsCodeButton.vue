@@ -72,7 +72,7 @@ const sending = ref(false);
 const retryAt = ref(0);
 const now = ref(Date.now());
 const countdown = computed(() => Math.max(0, Math.ceil((retryAt.value - now.value) / 1000)));
-const storageKey = "toonflowSmsRetry";
+const storageKey = "dramaaiSmsRetry";
 let captcha: CaptchaInstance | undefined;
 let controller: AbortController | undefined;
 let timer: ReturnType<typeof setInterval> | undefined;

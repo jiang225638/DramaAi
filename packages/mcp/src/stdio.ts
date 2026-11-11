@@ -40,12 +40,12 @@ async function main() {
   if (!(["http:", "https:"].includes(url.protocol)) || (url.protocol === "http:" && !local)) {
     throw new Error("远程 MCP 必须使用 HTTPS；本机连接允许 HTTP");
   }
-  if (values.runtime && !local) throw new Error("运行信息文件只允许指向本机 Toonflow");
+  if (values.runtime && !local) throw new Error("运行信息文件只允许指向本机 DramaAI");
   if (url.username || url.password) throw new Error("MCP URL 不允许包含账号或密码");
   const transport = new StreamableHTTPClientTransport(url, {
     requestInit: { headers: { Authorization: `Bearer ${token}`, "Accept-Language": locale } },
   });
-  const client = new Client({ name: "toonflow-stdio", version: "0.0.0" });
+  const client = new Client({ name: "dramaai-stdio", version: "0.0.0" });
   await client.connect(transport);
   if (!client.getServerCapabilities()?.tools) {
     await client.close();
@@ -53,7 +53,7 @@ async function main() {
   }
   const bridge = serveStdio(() => {
     const resources = client.getServerCapabilities()?.resources;
-    const server = new McpServer({ name: "toonflow", version: "0.0.0" }, {
+    const server = new McpServer({ name: "dramaai", version: "0.0.0" }, {
       capabilities: { tools: { listChanged: false }, ...(resources ? { resources: { subscribe: false, listChanged: false } } : {}) },
       instructions: client.getInstructions(),
     });

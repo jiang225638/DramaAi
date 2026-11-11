@@ -15,7 +15,7 @@ export function isLocalHostRequest(req: Request) {
 
 export async function getWorkspaceRoot(req: Request) {
   const user = req.res?.locals.multiTenantUser;
-  if (req.res?.locals.multiTenantWeb && !user) throw Object.assign(new Error("请先登录 Toonflow"), { status: 401 });
+  if (req.res?.locals.multiTenantWeb && !user) throw Object.assign(new Error("请先登录 DramaAI"), { status: 401 });
   if (user?.role === "user" && !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(user.id)) {
     throw Object.assign(new Error("账号工作区身份无效"), { status: 403 });
   }
@@ -47,7 +47,7 @@ export function isLocalWorkspaceRequest(req: Request) {
 export async function resolveWorkspace(req: Request, path: string) {
   if (!isAbsolute(path)) throw Object.assign(new Error("工作目录必须是绝对路径"), { status: 400 });
   const user = req.res?.locals.multiTenantUser;
-  if (req.res?.locals.multiTenantWeb && !user) throw Object.assign(new Error("请先登录 Toonflow"), { status: 401 });
+  if (req.res?.locals.multiTenantWeb && !user) throw Object.assign(new Error("请先登录 DramaAI"), { status: 401 });
   const userRoot = user?.role === "user" ? await getWorkspaceRoot(req) : null;
   if (userRoot) {
     const offset = relative(userRoot, resolve(path));

@@ -8,6 +8,6 @@ await createToolConfig({
 sandbox 每次调用使用全新的内存文件系统，工作目录为 /workspace；只导入显式指定的文件，只有成功执行后的 exports 才会写回工作区，默认不覆盖已有文件。
 JavaScript 使用 js-exec 运行，环境是 QuickJS，不具备完整 Node.js API；Python 使用 python3 运行，仅提供随附标准库，不支持 pip 安装或本机程序。沙盒禁用网络，不能据此承诺支持任意技能依赖。`,
   author: "Toonflow",
-  github: "https://github.com/HBAI-Ltd/Toonflow-app",
+  github: "https://github.com/jiang225638/DramaAi",
   configRules: [],
 }, import.meta.url);

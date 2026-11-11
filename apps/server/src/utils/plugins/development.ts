@@ -7,7 +7,7 @@ import { loadTool, toolsDirectory } from "./tools";
 
 export async function runPluginDevelopment(directory: string, input: unknown, signal: AbortSignal, install?: Pick<PluginDevelopmentHost, "installNode" | "installTool">) {
   const request = pluginDevelopmentSchema.parse(input);
-  if (!install && request.action !== "guide" && request.action !== "build") throw Object.assign(new Error("请先打开 Toonflow 桌面或网页"), { status: 403 });
+  if (!install && request.action !== "guide" && request.action !== "build") throw Object.assign(new Error("请先打开 DramaAI 桌面或网页"), { status: 403 });
   signal.throwIfAborted();
   const disabled = await lstat(resolve(toolsDirectory, "pluginDeveloper.disabled")).catch((error: NodeJS.ErrnoException) => {
     if (error.code !== "ENOENT") throw error;
@@ -19,7 +19,7 @@ export async function runPluginDevelopment(directory: string, input: unknown, si
   });
   if (typeof module.developPlugin !== "function") throw Object.assign(new Error("工具文件无效"), { status: 400 });
   signal.throwIfAborted();
-  const denyInstall = () => { throw Object.assign(new Error("请先打开 Toonflow 桌面或网页"), { status: 403 }); };
+  const denyInstall = () => { throw Object.assign(new Error("请先打开 DramaAI 桌面或网页"), { status: 403 }); };
   const develop = module.developPlugin as PluginDevelopmentHandler;
   return develop(directory, request, {
     resolveWorkspacePath, lockWorkspaceFiles, parsePluginVersion,

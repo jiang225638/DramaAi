@@ -8,7 +8,7 @@ import { t } from "@/lib/i18n";
 export async function getAgentModelConfiguration(providerId: string, modelId: string, thinkingLevel?: ThinkingLevel) {
   const configured = await getConfiguredModel(providerId, modelId);
   const actor = currentIdentity();
-  if (configured.execution && !actor) throw Object.assign(new Error("请先登录 Toonflow"), { status: 401 });
+  if (configured.execution && !actor) throw Object.assign(new Error("请先登录 DramaAI"), { status: 401 });
   // ACT: 旧版用 off 保存默认档位；模型未声明关闭能力时按默认处理，显式支持 off 的模型仍可关闭。
   if (thinkingLevel === "off" && !configured.model.reasoningLevels.includes("off")) thinkingLevel = undefined;
   if (thinkingLevel !== undefined && !configured.model.reasoningLevels.includes(thinkingLevel)) {

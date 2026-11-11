@@ -75,7 +75,7 @@
         </el-alert>
         <p v-if="checkingPluginExistence" class="listStatus" role="status">正在检查插件是否已在市场中…</p>
       </template>
-      <el-alert v-else-if="!accountToken" class="loadError" title="请先在账号与余额中登录 Toonflow 账号，再浏览和收藏插件。" type="info" :closable="false" showIcon />
+      <el-alert v-else-if="!accountToken" class="loadError" title="请先在账号与余额中登录 DramaAI 账号，再浏览和收藏插件。" type="info" :closable="false" showIcon />
       <el-alert v-else-if="marketError" class="loadError" :title="marketError" type="error" :closable="false" showIcon>
         <el-button size="small" @click="marketRefreshKey++">重试</el-button>
       </el-alert>
@@ -496,7 +496,7 @@ const visiblePlugins = computed(() => {
   return filteredInstalledPlugins.value.filter(
     (plugin) =>
       (selectedType.value === "all" || plugin.type === selectedType.value) &&
-      [plugin.name, plugin.displayName, plugin.author, plugin.description].some((value) =>
+      [plugin.name, plugin.displayName, plugin.author === "Toonflow" ? "DramaAI" : plugin.author, plugin.description].some((value) =>
         value?.toLowerCase().includes(appliedQuery.value.toLowerCase())
       )
   );

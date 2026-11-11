@@ -1,6 +1,6 @@
 # 插件开发工具
 
-这是 Toonflow 的内置工具，源码位于 `packages/tools/pluginDeveloper`，随默认工具构建和打包。节点和工具的源码编译复用现有脚手架与工作区依赖，无需注册本地链接。
+这是 DramaAI 的内置工具，源码位于 `packages/tools/pluginDeveloper`，随默认工具构建和打包。节点和工具的源码编译复用现有脚手架与工作区依赖，无需注册本地链接。
 
 在本工具目录构建，产物为仓库根目录的 `build/tools/pluginDeveloper.tool.js`。常用依赖会预编译并压成 ZIP 嵌入该文件，构建时按最终 JS 的实际字节数限制在 10 MB 以下：
 

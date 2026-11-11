@@ -236,7 +236,7 @@ async function send(content = draft.value) {
       if (event.type === "text" || event.type === "thinking" || event.type === "tool" || event.type === "question" || event.type === "retry") stream.receive(event);
       if (event.type === "question" && !signal.aborted && !notifiedQuestions.has(event.callId)) {
         notifiedQuestions.add(event.callId);
-        void showNotification({ title: "Toonflow", body: translate("工具正在等待你的确认") })
+        void showNotification({ title: "DramaAI", body: translate("工具正在等待你的确认") })
           .catch(error => console.warn("系统通知发送失败", error));
       }
       if (event.type === "status") changeStatus(event.status);
@@ -246,7 +246,7 @@ async function send(content = draft.value) {
         stream.finish();
         if (!notifiedCompletion && !signal.aborted) {
           notifiedCompletion = true;
-          void showNotification({ title: "Toonflow", body: translate("Agent 已完成回复") })
+          void showNotification({ title: "DramaAI", body: translate("Agent 已完成回复") })
             .catch(error => console.warn("系统通知发送失败", error));
         }
         emit("complete", { text: event.text, toolResults: event.toolResults, messages: JSON.parse(JSON.stringify(msgList.value)) });

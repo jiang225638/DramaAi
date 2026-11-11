@@ -7,7 +7,7 @@ import { searchPluginMarketSchema, installMarketPluginSchema, searchPluginMarket
 export function createPluginMarketTools(question?: QuestionContext): ToolDefinition[] {
   return [{
     name: "searchPluginMarket", label: "搜索插件市场",
-    description: "按关键词或类型搜索 Toonflow 插件市场，返回可用于安装的市场条目 ID。",
+    description: "按关键词或类型搜索 DramaAI 插件市场，返回可用于安装的市场条目 ID。",
     parameters: z.toJSONSchema(searchPluginMarketSchema, { io: "input", target: "draft-07" }),
     async execute(_id, params, signal) {
       const details = await searchPluginMarket(params, signal);
@@ -15,11 +15,11 @@ export function createPluginMarketTools(question?: QuestionContext): ToolDefinit
     },
   }, {
     name: "installMarketPlugin", label: "安装市场插件",
-    description: "按搜索结果的 ID 请求安装单个市场插件。等待本机用户在 Toonflow 中确认后下载并安装。用户取消后不要再次申请同一插件。",
+    description: "按搜索结果的 ID 请求安装单个市场插件。等待本机用户在 DramaAI 中确认后下载并安装。用户取消后不要再次申请同一插件。",
     parameters: z.toJSONSchema(installMarketPluginSchema, { io: "input", target: "draft-07" }),
     executionMode: "sequential",
     async execute(toolCallId, params, signal) {
-      if (!question) throw new Error("请先打开 Toonflow 桌面或网页");
+      if (!question) throw new Error("请先打开 DramaAI 桌面或网页");
       const plugin = resolveMarketPlugin(params, signal);
       const types = { node: "节点", tool: "工具", skill: "技能", ext: "文件扩展", agent: "Agent" };
       const request: QuestionRequest & { requiresLocalApproval: true } = {

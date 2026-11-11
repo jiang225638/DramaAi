@@ -100,11 +100,11 @@ public class mobileActivity extends Activity {
   private boolean failed;
   private String browserStage = "waiting";
   private String systemMissing = "";
-  private final Runnable browserTimeout = () -> showError("浏览器启动超时。请完全退出并重新打开 Toonflow。" + (systemMissing.isEmpty() ? "" : "\n系统 WebView 缺少：" + systemMissing), null);
+  private final Runnable browserTimeout = () -> showError("浏览器启动超时。请完全退出并重新打开 DramaAI。" + (systemMissing.isEmpty() ? "" : "\n系统 WebView 缺少：" + systemMissing), null);
   private final Runnable startupTimeout = () -> {
     synchronized (processLock) {
       if (stopping || failed || localOrigin != null || bunProcess == null || !bunProcess.isAlive()) return;
-      showError("Bun 启动超时（60 秒）。请通过 Logcat 查看 ToonflowMobile 日志。", null);
+      showError("Bun 启动超时（60 秒）。请通过 Logcat 查看 DramaAIMobile 日志。", null);
       stopBun();
     }
   };
@@ -133,7 +133,7 @@ public class mobileActivity extends Activity {
     root.addView(statusView, new FrameLayout.LayoutParams(-1, -1));
     progressView = new ProgressBar(this);
     progressView.setIndeterminateTintList(ColorStateList.valueOf(Color.rgb(64, 158, 255)));
-    progressView.setContentDescription("Loading Toonflow");
+    progressView.setContentDescription("Loading DramaAI");
     int progressSize = (int) (32 * getResources().getDisplayMetrics().density);
     root.addView(progressView, new FrameLayout.LayoutParams(progressSize, progressSize, Gravity.CENTER));
     setContentView(root);
@@ -208,7 +208,7 @@ public class mobileActivity extends Activity {
       root.addView(webView, 0, new FrameLayout.LayoutParams(-1, -1));
     } catch (RuntimeException | LinkageError error) {
       systemMissing = "系统 WebView 无法初始化";
-      Log.w("ToonflowMobile", systemMissing, error);
+      Log.w("DramaAIMobile", systemMissing, error);
       if (webView != null) webView.destroy();
       webView = null;
     }
@@ -295,7 +295,7 @@ public class mobileActivity extends Activity {
     } catch (RuntimeException error) {
       mediaPermissionPending = false;
       finishMedia(false);
-      Log.w("ToonflowMobile", "Unable to request media permission", error);
+      Log.w("DramaAIMobile", "Unable to request media permission", error);
     }
   }
 
@@ -353,9 +353,9 @@ public class mobileActivity extends Activity {
         });
       } catch (InterruptedException error) {
         Thread.currentThread().interrupt();
-        showError("Unable to restart Toonflow: interrupted while stopping Bun.", error);
+        showError("Unable to restart DramaAI: interrupted while stopping Bun.", error);
       } catch (IOException error) {
-        showError("Unable to restart Toonflow: " + error.getMessage(), error);
+        showError("Unable to restart DramaAI: " + error.getMessage(), error);
       }
     }, "mobileRestart").start();
   }
@@ -398,7 +398,7 @@ public class mobileActivity extends Activity {
         browserProbed(new JSONObject((String) decoded), false);
       } catch (Exception error) {
         systemMissing = "系统 WebView 无法完成能力检测";
-        Log.w("ToonflowMobile", systemMissing, error);
+        Log.w("DramaAIMobile", systemMissing, error);
         startGecko();
       }
     });
@@ -417,16 +417,16 @@ public class mobileActivity extends Activity {
     }
     mainHandler.removeCallbacks(browserTimeout);
     if (missing.length() > 0) {
-      if (gecko) showError("内置 GeckoView 缺少所需能力：" + names + "。请更新 Toonflow。\n系统 WebView 缺少：" + systemMissing, null);
+      if (gecko) showError("内置 GeckoView 缺少所需能力：" + names + "。请更新 DramaAI。\n系统 WebView 缺少：" + systemMissing, null);
       else {
         systemMissing = names.toString();
-        Log.w("ToonflowMobile", "System WebView missing: " + systemMissing);
+        Log.w("DramaAIMobile", "System WebView missing: " + systemMissing);
         startGecko();
       }
       return;
     }
     browserStage = "page";
-    Log.i("ToonflowMobile", (gecko ? "GeckoView" : "System WebView") + " capability check passed: " + result.getString("userAgent"));
+    Log.i("DramaAIMobile", (gecko ? "GeckoView" : "System WebView") + " capability check passed: " + result.getString("userAgent"));
     mainHandler.postDelayed(browserTimeout, 30000);
     loadBrowserUrl("http://127.0.0.1:" + localOrigin.getPort() + "/?mobile=1" + (gecko ? "&engine=gecko" : ""));
   }
@@ -496,10 +496,10 @@ public class mobileActivity extends Activity {
       });
       geckoSession.setContentDelegate(new GeckoSession.ContentDelegate() {
         @Override
-        public void onCrash(GeckoSession session) { showError("GeckoView 渲染进程已崩溃。请完全退出并重新打开 Toonflow。", null); }
+        public void onCrash(GeckoSession session) { showError("GeckoView 渲染进程已崩溃。请完全退出并重新打开 DramaAI。", null); }
 
         @Override
-        public void onKill(GeckoSession session) { showError("GeckoView 渲染进程被系统终止。请释放内存后重新打开 Toonflow。", null); }
+        public void onKill(GeckoSession session) { showError("GeckoView 渲染进程被系统终止。请释放内存后重新打开 DramaAI。", null); }
       });
       geckoSession.setPermissionDelegate(new GeckoSession.PermissionDelegate() {
         @Override
@@ -596,7 +596,7 @@ public class mobileActivity extends Activity {
         loadBrowserUrl(localOrigin.buildUpon().appendQueryParameter("probe", "1").appendQueryParameter("engine", "gecko").build().toString());
       }, error -> showError("无法初始化 GeckoView 原生通信：" + error.getMessage(), new IOException(error)));
     } catch (RuntimeException | LinkageError error) {
-      showError("无法启用内置 GeckoView：" + error.getMessage() + "。请更新 Toonflow 或系统 WebView。\n系统 WebView 缺少：" + systemMissing, new IOException(error));
+      showError("无法启用内置 GeckoView：" + error.getMessage() + "。请更新 DramaAI 或系统 WebView。\n系统 WebView 缺少：" + systemMissing, new IOException(error));
     }
   }
 
@@ -638,7 +638,7 @@ public class mobileActivity extends Activity {
           result.complete(stopping || failed || !isLocalPage() ? prompt.dismiss() : prompt.confirm(this, selected));
         });
       } catch (IOException | RuntimeException error) {
-        Log.w("ToonflowMobile", "读取导入文件失败", error);
+        Log.w("DramaAIMobile", "读取导入文件失败", error);
         mainHandler.post(() -> {
           if (prompt.isComplete()) return;
           result.complete(prompt.dismiss());
@@ -646,7 +646,7 @@ public class mobileActivity extends Activity {
         });
       } finally {
         if (stopping) try { removeProgramDirectory(uploadDirectory); }
-        catch (IOException error) { Log.w("ToonflowMobile", "清理文件缓存失败", error); }
+        catch (IOException error) { Log.w("DramaAIMobile", "清理文件缓存失败", error); }
       }
     }, "mobileImport").start();
   }
@@ -683,7 +683,7 @@ public class mobileActivity extends Activity {
           String line;
           while ((line = reader.readLine()) != null) {
             if (!line.startsWith("TOONFLOW_MOBILE_URL=")) {
-              Log.i("ToonflowMobile", line);
+              Log.i("DramaAIMobile", line);
               // 压缩源码上下文保留在 Logcat，避免淹没错误页面中的原因与堆栈。
               if (line.matches("^\\s*\\d+\\s*\\|.*")) continue;
               synchronized (outputTail) {
@@ -702,7 +702,7 @@ public class mobileActivity extends Activity {
               if (stopping || localOrigin != null || !process.isAlive()) continue;
               localOrigin = url;
               mainHandler.removeCallbacks(startupTimeout);
-              Log.i("ToonflowMobile", "Bun ready on port " + url.getPort());
+              Log.i("DramaAIMobile", "Bun ready on port " + url.getPort());
               mainHandler.post(() -> {
                 synchronized (processLock) {
                   if (!stopping && !failed && process.isAlive()) probeBrowser();
@@ -726,7 +726,7 @@ public class mobileActivity extends Activity {
         try { readerThread.join(200); } catch (InterruptedException error) { Thread.currentThread().interrupt(); }
         String output;
         synchronized (outputTail) { output = outputTail.toString().trim(); }
-        showError("Bun 已退出，退出码：" + exitCode + (output.isEmpty() ? "。请通过 Logcat 查看 ToonflowMobile 日志。" : "\n\n" + output), null);
+        showError("Bun 已退出，退出码：" + exitCode + (output.isEmpty() ? "。请通过 Logcat 查看 DramaAIMobile 日志。" : "\n\n" + output), null);
       }
     } catch (Exception error) {
       if (!stopping) showError("无法启动本地 Bun 服务：" + error.getMessage(), error);
@@ -856,16 +856,16 @@ public class mobileActivity extends Activity {
           } finally { connection.disconnect(); }
         }
       } catch (Exception error) {
-        Log.e("ToonflowMobile", "导出文件失败", error);
+        Log.e("DramaAIMobile", "导出文件失败", error);
         errorMessage = "导出文件失败：" + error.getMessage();
       } finally {
         try {
           HttpURLConnection cleanup = openExport(url, cookie, "DELETE");
           try {
             int code = cleanup.getResponseCode();
-            if (code >= 400 && code != 404) Log.w("ToonflowMobile", "清理导出文件失败：HTTP " + code);
+            if (code >= 400 && code != 404) Log.w("DramaAIMobile", "清理导出文件失败：HTTP " + code);
           } finally { cleanup.disconnect(); }
-        } catch (IOException error) { Log.w("ToonflowMobile", "清理导出文件失败", error); }
+        } catch (IOException error) { Log.w("DramaAIMobile", "清理导出文件失败", error); }
       }
       notifySave(request.getQueryParameter("requestId"), saved, errorMessage);
     }, "mobileExport").start();
@@ -886,7 +886,7 @@ public class mobileActivity extends Activity {
         message.put("detail", new JSONObject(detail));
         try { geckoPort.postMessage(new JSONObject(message)); }
         catch (RuntimeException sendError) { showError("无法返回文件保存结果：" + sendError.getMessage(), sendError); }
-      } else showError("GeckoView 原生通信已断开。请重新打开 Toonflow。", null);
+      } else showError("GeckoView 原生通信已断开。请重新打开 DramaAI。", null);
     });
   }
 
@@ -924,7 +924,7 @@ public class mobileActivity extends Activity {
       if (isDestroyed() || failed) return;
       failed = true;
       browserStage = "error";
-      Log.e("ToonflowMobile", message, error);
+      Log.e("DramaAIMobile", message, error);
       progressView.setVisibility(View.GONE);
       statusView.setGravity(Gravity.TOP | Gravity.START);
       int padding = (int) (24 * getResources().getDisplayMetrics().density);
@@ -997,7 +997,7 @@ public class mobileActivity extends Activity {
     if (geckoSession != null) geckoSession.close();
     new Thread(() -> {
       try { removeProgramDirectory(uploadDirectory); }
-      catch (IOException error) { Log.w("ToonflowMobile", "清理文件缓存失败", error); }
+      catch (IOException error) { Log.w("DramaAIMobile", "清理文件缓存失败", error); }
     }, "mobileImportCleanup").start();
     super.onDestroy();
   }

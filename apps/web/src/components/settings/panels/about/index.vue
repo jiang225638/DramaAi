@@ -67,16 +67,6 @@
       </div>
     </el-card>
 
-    <el-card class="infoCard repositoryCard" shadow="never">
-      <a class="repositoryLink" href="https://github.com/HBAI-Ltd/Toonflow-app" target="_blank" rel="noopener noreferrer" aria-label="开源致谢：HBAI-Ltd/Toonflow-app">
-        <icon-brand-github class="repositoryIcon" :size="22" aria-hidden="true" />
-        <div class="repositoryInfo">
-          <span class="repositoryTitle">开源许可致谢：基于 Toonflow (MIT License, Copyright © 2026 HBAI-Ltd) 构建</span>
-        </div>
-        <icon-external-link class="externalIcon" :size="16" aria-hidden="true" />
-      </a>
-    </el-card>
-
     <el-dialog v-model="privacyVisible" title="隐私" width="min(660px, calc(100vw - 32px))" alignCenter appendToBody destroyOnClose>
       <privacy />
     </el-dialog>
@@ -156,7 +146,6 @@ import { actualPlatform, isMobile, isLocalDesktop, isRemoteConnection } from "@/
 import {
   IconRefresh,
   IconBrandGithub,
-  IconExternalLink,
   IconAlertCircle,
   IconArrowUpCircle,
   IconCircleCheck,
@@ -420,53 +409,6 @@ async function runUpdate(nextAction: "read" | "check" | "download" | "apply") {
 
       strong { color: var(--el-color-danger); }
       p { margin: 8px 0 12px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
-    }
-
-    &.repositoryCard {
-      transition: border-color 0.2s;
-
-      :deep(.el-card__body) {
-        padding: 0;
-      }
-      &:hover {
-        border-color: var(--el-border-color-darker);
-      }
-
-      .repositoryLink {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 14px;
-        color: var(--el-text-color-primary);
-        text-decoration: none;
-
-        &:focus-visible {
-          outline: 2px solid var(--el-color-primary);
-          outline-offset: -2px;
-          border-radius: calc(var(--ui-radius) * 1);
-        }
-
-        .repositoryIcon,
-        .externalIcon {
-          flex-shrink: 0;
-        }
-        .externalIcon {
-          color: var(--el-text-color-secondary);
-        }
-
-        .repositoryInfo {
-          display: flex;
-          flex: 1;
-          flex-direction: column;
-          gap: 6px;
-          min-width: 0;
-
-          .repositoryTitle {
-            font-size: 14px;
-            font-weight: 600;
-          }
-        }
-      }
     }
   }
 

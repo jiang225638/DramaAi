@@ -244,7 +244,7 @@ function parseProvider(source: string, accountLanguage = false) {
         : target.computed && target.property.type === "StringLiteral" ? target.property.value : "";
       return ["vendor", "textRequest", "imageRequest", "videoRequest", "ttsRequest"].includes(name);
     });
-    if (legacy) invalid("检测到旧版 Toonflow 供应商 TS，无法在 Toonflow 2.0 中使用。请在「添加自定义媒体供应商」中点击「一键复制提示词」，结合旧代码和接口资料重新生成新版代码后再导入。");
+    if (legacy) invalid("检测到旧版供应商 TS，无法在当前版本中使用。请在「添加自定义媒体供应商」中点击「一键复制提示词」，结合旧代码和接口资料重新生成新版代码后再导入。");
     invalid("供应商须通过 export default 导出对象");
   }
   const object = unwrap(exported.declaration as Expression);
@@ -365,7 +365,7 @@ export async function getMediaProvider(id: string) {
 
 export async function getMediaProviderSource(fileName: string) {
   if (!mediaProviderFileSchema.safeParse(fileName).success) invalid("供应商文件名无效");
-  if (fileName.toLowerCase() === "toonflow.ts") invalid("Toonflow 供应商由账号与余额管理，请在账号页刷新");
+  if (fileName.toLowerCase() === "toonflow.ts") invalid("DramaAI 供应商由账号与余额管理，请在账号页刷新");
   const path = await directory();
   if (!path) invalid("供应商文件不存在", 404);
   return readProvider(path, fileName).catch((error: NodeJS.ErrnoException) => {
@@ -395,7 +395,7 @@ export async function listMediaProviders() {
 export async function addMediaProvider(source: string, signal?: AbortSignal) {
   signal?.throwIfAborted();
   const result = validateMediaProviderSource(source);
-  if (result.id.toLowerCase() === "toonflow") invalid("Toonflow 供应商由账号与余额管理，请登录后刷新");
+  if (result.id.toLowerCase() === "toonflow") invalid("DramaAI 供应商由账号与余额管理，请登录后刷新");
   const { fileName } = result;
   const path = join((await directory(true))!, fileName);
   const release = lockWorkspaceFiles([path]);
@@ -460,7 +460,7 @@ export async function installAccountProvider(sources: ProviderSources, token: st
 
 export async function saveMediaProvider(fileName: string, content: string | z.infer<typeof mediaModelsSchema>, revision: string, expectedApiKey?: string) {
   if (!mediaProviderFileSchema.safeParse(fileName).success) invalid("供应商文件名无效");
-  if (fileName.toLowerCase() === "toonflow.ts") invalid("Toonflow 供应商由账号与余额管理，请在账号页刷新");
+  if (fileName.toLowerCase() === "toonflow.ts") invalid("DramaAI 供应商由账号与余额管理，请在账号页刷新");
   const path = await directory();
   if (!path) invalid("供应商文件不存在", 404);
   const release = lockWorkspaceFiles([join(path, fileName)]);
@@ -482,7 +482,7 @@ function getMediaProviderApiKey(id: string) {
 
 export async function refreshMediaProviderModels(fileName: string, revision: string) {
   if (!mediaProviderFileSchema.safeParse(fileName).success) invalid("供应商文件名无效");
-  if (fileName.toLowerCase() === "toonflow.ts") invalid("Toonflow 供应商由账号与余额管理，请在账号页刷新");
+  if (fileName.toLowerCase() === "toonflow.ts") invalid("DramaAI 供应商由账号与余额管理，请在账号页刷新");
   const provider = await getMediaProvider(fileName.slice(0, -3));
   if (revision !== provider.revision) invalid("供应商文件已被修改，请刷新页面后再获取", 409);
   if (!provider.modelsUrl) invalid("供应商未配置 modelsUrl");
@@ -522,7 +522,7 @@ export async function refreshMediaProviderModels(fileName: string, revision: str
 
 export async function deleteMediaProvider(fileName: string, revision: string) {
   if (!mediaProviderFileSchema.safeParse(fileName).success) invalid("供应商文件名无效");
-  if (fileName.toLowerCase() === "toonflow.ts") invalid("Toonflow 供应商由账号与余额管理");
+  if (fileName.toLowerCase() === "toonflow.ts") invalid("DramaAI 供应商由账号与余额管理");
   const path = await directory();
   if (!path) invalid("供应商文件不存在", 404);
   const file = join(path, fileName);
@@ -543,13 +543,13 @@ export async function loadMediaProviderSource(source: string, config: Record<str
   if (id === "toonflow") {
     if (!platformAccount) {
       const installed = await getMediaProvider(id);
-      if (source !== installed.source || !source.startsWith(accountSourcePrefix)) invalid("只能运行已安装的 Toonflow 账号供应商", 403);
+      if (source !== installed.source || !source.startsWith(accountSourcePrefix)) invalid("只能运行已安装的 DramaAI 账号供应商", 403);
       const account = getAccountProvider();
-      if (!account) invalid("请先登录 Toonflow 账号并刷新供应商", 401);
+      if (!account) invalid("请先登录 DramaAI 账号并刷新供应商", 401);
       const accountToken = getAccountToken();
       const originalFetch = fetchRequest;
       fetchRequest = Object.assign((input: Parameters<typeof fetch>[0], init?: RequestInit) => {
-        if (getAccountToken() !== accountToken) invalid("Toonflow 账号已变更，请重新发起请求", 401);
+        if (getAccountToken() !== accountToken) invalid("DramaAI 账号已变更，请重新发起请求", 401);
         return originalFetch(input, init);
       }, { preconnect: originalFetch.preconnect }) as typeof fetch;
     }
@@ -651,7 +651,7 @@ export async function loadMediaProviderSource(source: string, config: Record<str
       catch (error) {
         const info = error as { name?: unknown; message?: unknown; code?: unknown; status?: unknown } | null;
         if (signal?.aborted || info?.name === "AbortError") throw error;
-        // ACT: 兼容旧 Toonflow 供应商的普通错误；仅明确任务终态补标，查询异常仍保留复查。
+        // ACT: 兼容旧 DramaAI 供应商的普通错误；仅明确任务终态补标，查询异常仍保留复查。
         const taskFailed = id === "toonflow" && !overlappingRequests && failure?.taskFailed === true && info?.code === undefined;
         let message = mediaErrorMessage(error, provider.config) || (taskFailed ? "媒体生成失败" : "");
         if (!message) throw error;

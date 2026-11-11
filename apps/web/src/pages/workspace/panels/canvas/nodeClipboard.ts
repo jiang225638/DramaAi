@@ -2,14 +2,14 @@ import type { Edge, GraphEdge, GraphNode, Node } from "@vue-flow/core";
 import { isNodeOutput } from "@toonflow/nodes-scaffold/values";
 import { writeClipboardText } from "@/lib/clipboard";
 
-export const nodeClipboardCommand = /^toonflow:paste-node:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+export const nodeClipboardCommand = /^(?:dramaai|toonflow):paste-node:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 type ClipboardNode = { type: string; data: Record<string, unknown> };
 type ClipboardEntry = { command: string; directory: string; node?: ClipboardNode; nodes?: Node[]; edges?: Edge[] };
 
 async function openClipboardDatabase() {
   return new Promise<IDBDatabase>((resolve, reject) => {
-    const request = indexedDB.open("toonflow.nodeClipboard", 1);
+    const request = indexedDB.open("dramaai.nodeClipboard", 1);
     request.onupgradeneeded = () => request.result.createObjectStore("nodes");
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
@@ -39,7 +39,7 @@ export function copyNodeToClipboard(node: Pick<Node, "type" | "data">, directory
 export async function copyNodesToClipboard(nodes: Node[], edges: Edge[], directory: string) {
   if (!directory) throw new Error("请先打开项目");
   if (!nodes.length || nodes.some(node => !node.type)) throw new Error("节点类型无效");
-  const command = `toonflow:paste-node:${crypto.randomUUID()}`;
+  const command = `dramaai:paste-node:${crypto.randomUUID()}`;
   const ids = new Set(nodes.map(node => node.id));
   // ACT: 与画布序列化一样移除运行态字段，保留分组、尺寸及节点自定义持久配置。
   const snapshot = JSON.parse(JSON.stringify({

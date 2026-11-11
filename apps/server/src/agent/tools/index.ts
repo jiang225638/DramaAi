@@ -53,7 +53,7 @@ export function createAgentToolContext(cwd: string, config: Record<string, unkno
     requireWorkspace();
     signal?.throwIfAborted();
     if (!modelGateway.enabled()) return generateMedia(cwd, mediaType, request, signal);
-    if (!actor) throw Object.assign(new Error("请先登录 Toonflow"), { status: 401 });
+    if (!actor) throw Object.assign(new Error("请先登录 DramaAI"), { status: 401 });
     const taskId = crypto.randomUUID();
     await mediaTasks.start(cwd, taskId, mediaType, request, {}, actor);
     return mediaTasks.wait(cwd, taskId, actor, signal);

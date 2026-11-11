@@ -28,10 +28,10 @@ async function start() {
     try { value = await file(join(directory, "desktopRuntime.json")).json(); }
     catch (error) {
       if ((error as NodeJS.ErrnoException).code === "ENOENT") return;
-      throw new Error(t`无法读取 Toonflow 运行状态`, { cause: error });
+      throw new Error(t`无法读取 DramaAI 运行状态`, { cause: error });
     }
     if (!Number.isSafeInteger(value?.pid) || value.pid <= 0 || !Number.isSafeInteger(value?.port)
-      || value.port < 1 || value.port > 65535) throw new Error(t`Toonflow 运行状态无效，请检查数据目录`);
+      || value.port < 1 || value.port > 65535) throw new Error(t`DramaAI 运行状态无效，请检查数据目录`);
     try {
       // ACT: 核对 SDK 的完整启动路径，排除重启后的 PID 复用；包升级替换旧 Bun 时原进程的 argv 仍有效。
       const [executable, entrypoint] = (await readFile(`/proc/${value.pid}/cmdline`, "utf8")).split("\0");
@@ -41,7 +41,7 @@ async function start() {
     }
     catch (error) {
       if (["ENOENT", "ESRCH"].includes((error as NodeJS.ErrnoException).code ?? "")) return;
-      throw new Error(t`无法确认 Toonflow 进程状态`, { cause: error });
+      throw new Error(t`无法确认 DramaAI 进程状态`, { cause: error });
     }
     return value;
   }
@@ -62,9 +62,9 @@ async function start() {
   child.unref();
   const deadline = performance.now() + 45000;
   while (performance.now() < deadline) {
-    if (child.signalCode !== null) throw new Error(t`Toonflow 启动进程已被终止：${child.signalCode}`);
+    if (child.signalCode !== null) throw new Error(t`DramaAI 启动进程已被终止：${child.signalCode}`);
     if (child.exitCode !== null && child.exitCode !== 75) {
-      throw new Error(t`Toonflow 启动失败，退出码：${child.exitCode}`);
+      throw new Error(t`DramaAI 启动失败，退出码：${child.exitCode}`);
     }
     const runtime = await readRuntime();
     if (runtime) {
@@ -73,7 +73,7 @@ async function start() {
     }
     await setTimeout(250);
   }
-  throw new Error(t`Toonflow 启动超时，请打开应用后重新点击安装链接`);
+  throw new Error(t`DramaAI 启动超时，请打开应用后重新点击安装链接`);
 }
 
 async function sendUrl(port: number, url: string) {
@@ -89,9 +89,9 @@ async function sendUrl(port: number, url: string) {
     req.once("error", reject);
     req.end(body);
   }).catch(error => {
-    if (error.code === "ABORT_ERR") throw new Error(t`提交安装请求超时，请等待 Toonflow 响应后重试`, { cause: error });
-    if (error.code === "ECONNREFUSED") throw new Error(t`Toonflow 正在运行，但本机服务尚未就绪，请稍后重试`, { cause: error });
-    throw new Error(t`无法提交安装请求，请确认 Toonflow 正常运行后重试`, { cause: error });
+    if (error.code === "ABORT_ERR") throw new Error(t`提交安装请求超时，请等待 DramaAI 响应后重试`, { cause: error });
+    if (error.code === "ECONNREFUSED") throw new Error(t`DramaAI 正在运行，但本机服务尚未就绪，请稍后重试`, { cause: error });
+    throw new Error(t`无法提交安装请求，请确认 DramaAI 正常运行后重试`, { cause: error });
   });
   response.setEncoding("utf8");
   let text = "";
@@ -99,18 +99,18 @@ async function sendUrl(port: number, url: string) {
     text += chunk.toString();
     if (text.length > 65536) {
       response.destroy();
-      throw new Error(t`Toonflow 返回的安装响应过大`);
+      throw new Error(t`DramaAI 返回的安装响应过大`);
     }
   }
   let result;
   try { result = JSON.parse(text); }
   catch {
-    if (response.statusCode !== 200) throw new Error(t`Toonflow 拒绝安装请求，HTTP 状态：${response.statusCode}`);
-    throw new Error(t`Toonflow 返回的安装响应不是有效 JSON`);
+    if (response.statusCode !== 200) throw new Error(t`DramaAI 拒绝安装请求，HTTP 状态：${response.statusCode}`);
+    throw new Error(t`DramaAI 返回的安装响应不是有效 JSON`);
   }
   if (response.statusCode !== 200 || result?.code !== 200) {
     const detail = typeof result?.message === "string" ? result.message : t`请检查应用状态后重试`;
-    throw new Error(t`Toonflow 未接受安装请求：${detail}`);
+    throw new Error(t`DramaAI 未接受安装请求：${detail}`);
   }
 }
 
@@ -119,7 +119,7 @@ catch (error) {
   const message = error instanceof Error ? error.message : String(error);
   console.error(message);
   try {
-    const dialog = Bun.spawn(["zenity", "--error", "--title=Toonflow", "--no-markup", "--text", message], {
+    const dialog = Bun.spawn(["zenity", "--error", "--title=DramaAI", "--no-markup", "--text", message], {
       stdin: "ignore", stdout: "ignore", stderr: "ignore",
     });
     await dialog.exited;

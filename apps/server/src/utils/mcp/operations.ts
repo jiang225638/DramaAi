@@ -168,7 +168,7 @@ export async function runAppOperation(name: string, parameters: Record<string, u
     return addMediaProvider(source, installSignal);
   }
   const origin = getMcpRuntime().appOrigin;
-  if (!origin) throw new Error("Toonflow 服务尚未就绪");
+  if (!origin) throw new Error("DramaAI 服务尚未就绪");
   const url = new URL(operation.path, origin);
   const headers: Record<string, string> = { ...getAppRequestHeaders(), "x-toonflow-workspace": "1", Origin: origin, Referer: `${origin}/`, "Accept-Language": getLocale() };
   let body: string | ArrayBuffer | undefined;

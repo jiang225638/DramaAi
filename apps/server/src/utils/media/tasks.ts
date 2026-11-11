@@ -87,7 +87,7 @@ let activeCount = 0;
 
 function invalid(message: string, status = 400): never { throw Object.assign(new Error(message), { status }); }
 function requireOwner(owner?: AuthIdentity | null) {
-  if (modelGateway.enabled() && !owner) invalid("请先登录 Toonflow", 401);
+  if (modelGateway.enabled() && !owner) invalid("请先登录 DramaAI", 401);
 }
 function assertOwner(task: MediaTask, owner?: AuthIdentity | null) {
   if (owner?.role === "admin") return;

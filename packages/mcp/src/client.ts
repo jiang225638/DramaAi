@@ -57,7 +57,7 @@ export async function connectMcpServer(server: McpServerConfig) {
   if (transport instanceof StdioClientTransport) {
     transport.stderr?.on("data", chunk => { stderr = `${stderr}${String(chunk)}`.slice(-2000); });
   }
-  const client = new Client({ name: "toonflow", version: "0.0.0" });
+  const client = new Client({ name: "dramaai", version: "0.0.0" });
   let timer: ReturnType<typeof setTimeout> | undefined;
   const close = async () => {
     let closeTimer: ReturnType<typeof setTimeout> | undefined;

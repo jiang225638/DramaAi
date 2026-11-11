@@ -567,7 +567,7 @@ async function sendMessage(source?: AgentMessage) {
         if (!notifiedQuestions.has(toolEvent.callId) && !stopping.value && !projectStops.value
           && !requestController.signal.aborted && !canvasRunIds.some(id => stoppedRunIds.has(id))) {
           notifiedQuestions.add(toolEvent.callId);
-          void showNotification({ title: "Toonflow", body: translate("工具正在等待你的确认") })
+          void showNotification({ title: "DramaAI", body: translate("工具正在等待你的确认") })
             .catch(error => console.warn("系统通知发送失败", error));
         }
       }
@@ -655,7 +655,7 @@ async function sendMessage(source?: AgentMessage) {
     emit("sent", mentionPlainText(prompt, mentions) || attachments[0]?.name || "新对话");
     if (accepted && ownsStream && !forwarded && !isSuperseded() && !props.initialSession?.parentFile && !stopping.value && !projectStops.value
       && !requestController.signal.aborted && !stoppedRunIds.has(requestRunId)) {
-      void showNotification({ title: "Toonflow", body: translate("Agent 已完成回复") })
+      void showNotification({ title: "DramaAI", body: translate("Agent 已完成回复") })
         .catch(error => console.warn("系统通知发送失败", error));
     }
   } catch (error) {

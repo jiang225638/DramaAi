@@ -17,7 +17,7 @@ $ErrorActionPreference = 'Stop'
 $options = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('${payload}')) | ConvertFrom-Json
 $registration = [Microsoft.Win32.Registry]::CurrentUser.CreateSubKey('Software\\Classes\\AppUserModelId\\' + $options.appId)
 try {
-  $registration.SetValue('DisplayName', 'Toonflow')
+  $registration.SetValue('DisplayName', 'DramaAI')
   $registration.SetValue('IconUri', $options.iconPath, [Microsoft.Win32.RegistryValueKind]::ExpandString)
 } finally {
   $registration.Dispose()

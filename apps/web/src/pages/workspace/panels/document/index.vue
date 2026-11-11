@@ -69,13 +69,15 @@ let restoring = false;
 let rebuilding = false;
 let treeWidth = 260;
 let layoutTimer: ReturnType<typeof setTimeout> | undefined;
-const layoutKey = `toonflow:documentLayout:${directory}`;
+const layoutKey = `dramaai:documentLayout:${directory}`;
 type SavedTab = { id?: string; preview?: boolean; selection: TreeSelection; extensionId: string };
 type SavedLayout = { layout: ReturnType<DockviewApi["toJSON"]>; tabs: SavedTab[]; treeWidth: number };
 const closedTabs: SavedTab[] = [];
 const extensionVersions = new Map<string, string | undefined>();
 let savedLayout: SavedLayout | undefined;
-try { savedLayout = JSON.parse(settingsStorage.getItem(layoutKey) ?? "null") ?? undefined; } catch { /* 旧布局损坏时从空工作区开始。 */ }
+try {
+  savedLayout = JSON.parse(settingsStorage.getItem(layoutKey) ?? settingsStorage.getItem(`toonflow:documentLayout:${directory}`) ?? "null") ?? undefined;
+} catch { /* 旧布局损坏时从空工作区开始。 */ }
 if (savedLayout?.treeWidth && Number.isFinite(savedLayout.treeWidth)) treeWidth = Math.max(180, Math.min(600, savedLayout.treeWidth));
 
 function editorParams(id: string, session: DocumentSession): EditorParams {

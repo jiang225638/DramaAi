@@ -17,7 +17,10 @@ import { ref } from "vue";
 import { ElTour, ElTourStep } from "element-plus";
 
 defineProps<{ root?: HTMLElement }>();
-const storageKey = "toonflow.director3dTour";
+const storageKey = "dramaai.director3dTour";
+const legacyStorageKey = "toonflow.director3dTour";
+if (localStorage.getItem(legacyStorageKey) === "true") localStorage.setItem(storageKey, "true");
+localStorage.removeItem(legacyStorageKey);
 const open = ref(localStorage.getItem(storageKey) !== "true");
 const steps = [
   {

@@ -101,7 +101,7 @@ internal static class updateHelper
                 string parentPath = parent.MainModule.FileName;
                 if (parent.HasExited || (!inside(parentPath, Path.Combine(root, "app", "bin"))
                     && !samePath(parentPath, Path.Combine(root, "app", "Resources", "app", "startupLauncher.exe"))))
-                    throw new InvalidOperationException("父进程不属于当前 Toonflow 安装。");
+                    throw new InvalidOperationException("父进程不属于当前 DramaAI 安装。");
                 using (var sha = SHA256.Create())
                     if (!String.Equals(BitConverter.ToString(sha.ComputeHash(archiveStream)).Replace("-", ""), expectedDigest, StringComparison.OrdinalIgnoreCase))
                         throw new InvalidOperationException("更新包 SHA-256 校验失败。");
@@ -120,7 +120,7 @@ internal static class updateHelper
                 while (!parent.WaitForExit(250))
                 {
                     if (!File.Exists(planPath)) throw new InvalidOperationException("更新已取消。");
-                    if (timer.Elapsed.TotalSeconds >= 60) throw new InvalidOperationException("Toonflow 未在 60 秒内退出，更新已取消。");
+                    if (timer.Elapsed.TotalSeconds >= 60) throw new InvalidOperationException("DramaAI 未在 60 秒内退出，更新已取消。");
                 }
                 if (!File.Exists(planPath)) throw new InvalidOperationException("更新已取消。");
                 ensurePlainPath(root);
@@ -145,7 +145,7 @@ internal static class updateHelper
                 catch (Exception stateError) { error = new Exception(error.Message + "\n更新结果无法写入：" + stateError.Message); }
             }
             Console.Error.WriteLine(error.Message);
-            if (!quiet) MessageBox.Show(error.Message, "Toonflow 更新失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!quiet) MessageBox.Show(error.Message, "DramaAI 更新失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return 1;
         }
         finally
@@ -334,13 +334,13 @@ internal static class updateHelper
         options.EnvironmentVariables.Remove("TOONFLOW_UPDATE_TRANSACTION");
         if (transaction != null) options.EnvironmentVariables["TOONFLOW_UPDATE_TRANSACTION"] = transaction;
         process = Process.Start(options);
-        if (process == null) throw new InvalidOperationException("更新后无法启动 Toonflow。");
+        if (process == null) throw new InvalidOperationException("更新后无法启动 DramaAI。");
         // 在应用确认就绪或清理完成前保持句柄，不能用进程名称定位本次启动。
         IntPtr handle = process.Handle;
         if (transaction == null)
         {
             // ACT: 回滚版本可能尚不支持就绪协议，保留旧启动器的短暂退出检查。
-            if (process.WaitForExit(1000) && process.ExitCode != 0) throw new InvalidOperationException("恢复旧版本后无法启动 Toonflow。");
+            if (process.WaitForExit(1000) && process.ExitCode != 0) throw new InvalidOperationException("恢复旧版本后无法启动 DramaAI。");
             return;
         }
         var timer = Stopwatch.StartNew();
@@ -439,7 +439,7 @@ internal static class updateHelper
         catch (Exception error)
         {
             Console.Error.WriteLine(error.Message);
-            if (!quiet) MessageBox.Show(error.Message, "Toonflow 解压失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!quiet) MessageBox.Show(error.Message, "DramaAI 解压失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return 1;
         }
     }
@@ -593,7 +593,7 @@ internal static class updateHelper
             request.AllowAutoRedirect = false;
             request.Timeout = remaining;
             request.ReadWriteTimeout = remaining;
-            request.UserAgent = "Toonflow";
+            request.UserAgent = "DramaAI";
             using (var timeout = new System.Threading.Timer(value => request.Abort(), null, remaining, Timeout.Infinite))
             using (var response = (HttpWebResponse)request.GetResponse())
             {
@@ -753,7 +753,7 @@ internal static class updateHelper
         {
             registry.SetValue("toonflowInstallDirectory", root);
             registry.SetValue("InstallLocation", root);
-            registry.SetValue("DisplayName", "Toonflow");
+            registry.SetValue("DisplayName", "DramaAI");
             registry.SetValue("DisplayVersion", version);
             registry.SetValue("DisplayIcon", Path.Combine(root, "app", "Resources", "app.ico"));
             registry.SetValue("UninstallString", quote(uninstaller));

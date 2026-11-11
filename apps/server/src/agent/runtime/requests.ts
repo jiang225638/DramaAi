@@ -106,7 +106,7 @@ export function configureAgentRequests(session: AgentSession, limits?: { maxRequ
         const auth = await session.modelRuntime.getAuth(model, { apiKey: options?.apiKey, env: options?.env, signal: options?.signal });
         const apiKey = options?.apiKey ?? auth?.auth.apiKey;
         if (!configured?.route && model.provider.toLowerCase() === "toonflow" && (!provider || provider.apiKey !== apiKey)) {
-          throw new Error("Toonflow 账号已变更，请重新发起请求");
+          throw new Error("DramaAI 账号已变更，请重新发起请求");
         }
         const files = createFileTransport({
           apiUrl: auth?.auth.baseUrl ?? model.baseUrl,

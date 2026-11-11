@@ -3,7 +3,7 @@
     <div class="providerPicker">
       <aside class="providerSidebar" aria-label="选择厂商">
         <button
-          v-for="item in languageProviders"
+          v-for="item in availableProviders"
           :key="item.id"
           class="providerItem"
           type="button"
@@ -59,9 +59,29 @@ import { modelIcon } from "@toonflow/model-icons";
 import messageMarkdown from "@/components/messageMarkdown.vue";
 import type { Column } from "element-plus";
 import { saveSettings, type CustomProviderModel } from "@/stores/settings";
+import { presetLanguageProviders } from "./presetLanguageProviders";
+
+const defaultApiKeyRules = [
+  {
+    type: "input",
+    field: "apiKey" as const,
+    title: "API Key",
+    value: "",
+    props: { type: "password", showPassword: true, autocomplete: "off" },
+  },
+];
+const availableProviders = [
+  ...presetLanguageProviders.map(preset => ({
+    ...preset,
+    icon: undefined as string | undefined,
+    version: "1.0.0",
+    rules: defaultApiKeyRules,
+  })),
+  ...languageProviders,
+];
 
 const visible = defineModel<boolean>({ default: false });
-const selectedProvider = ref<string>(languageProviders[0]?.id ?? "");
+const selectedProvider = ref<string>(availableProviders[0]?.id ?? "");
 const formApi = shallowRef<Api>();
 const formValues = ref<Record<string, unknown>>({});
 const models = shallowRef<CustomProviderModel[]>([]);
@@ -78,7 +98,7 @@ watch(selectedProvider, () => {
   formError.value = "";
   formValues.value = {};
 }, { flush: "sync" });
-const activeProvider = computed(() => languageProviders.find(provider => provider.id === selectedProvider.value));
+const activeProvider = computed(() => availableProviders.find(provider => provider.id === selectedProvider.value));
 const providerReadme = computed(() => {
   const provider = activeProvider.value;
   return provider && "readme" in provider && typeof provider.readme === "string" ? provider.readme : "";
@@ -129,7 +149,7 @@ watch(
 );
 
 function resetForm() {
-  selectedProvider.value = languageProviders[0]?.id ?? "";
+  selectedProvider.value = availableProviders[0]?.id ?? "";
   formError.value = "";
   formApi.value = undefined;
   formValues.value = {};

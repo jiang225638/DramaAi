@@ -249,7 +249,7 @@ async function requestModel(input: NodeAiRequest, context: Context, model: Model
         if (event.type === "text" || event.type === "reasoning") onEvent?.(event);
         if (event.type !== "done") continue;
         const message = event.message as AssistantMessage;
-        if (message?.role !== "assistant" || !Array.isArray(message.content)) throw new Error("AI 返回的消息不完整，请确认 Toonflow 服务端已更新后重试。");
+        if (message?.role !== "assistant" || !Array.isArray(message.content)) throw new Error("AI 返回的消息不完整，请确认 DramaAI 服务端已更新后重试。");
         if (message.stopReason === "deferred" || message.stopReason === "pending") throw new Error("AI 返回的任务尚未完成，本次生成未能正常结束。");
         if (message.stopReason === "error" || message.stopReason === "aborted") throw new Error(message.errorMessage || "AI 请求失败");
         // ACT: 增量直接通知 UI；SDK 只消费完整单轮消息，避免每个 token 传输全量快照。
@@ -404,7 +404,7 @@ export function useNodeAi(options: { onModelsChanged?: () => unknown } = {}) {
         waitingSignal.addEventListener("abort", abort, { once: true });
       })]);
       waitingSignal.throwIfAborted();
-      if (started.taskId !== taskId) throw new Error("生成任务响应无效，无法确认任务状态，请确认 Toonflow 服务端已更新后重试。");
+      if (started.taskId !== taskId) throw new Error("生成任务响应无效，无法确认任务状态，请确认 DramaAI 服务端已更新后重试。");
     } catch (error) {
       if (!waitingSignal.aborted) explicitCancel();
       waitingSignal.removeEventListener("abort", explicitCancel);

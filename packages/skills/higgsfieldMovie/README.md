@@ -13,8 +13,8 @@ description: …                  # 说明用简短语言写清「源自什么 +
 metadata:
   version: "2.0.0"
   displayName: 大师级电影制作      # 用户可见的名字
-  author: Toonflow
-  github: https://github.com/HBAI-Ltd/Toonflow-app
+  author: DramaAI
+  github: https://github.com/jiang225638/DramaAi
 ```
 
 ## 1. 这份东西从哪来

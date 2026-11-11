@@ -12,6 +12,20 @@
     @closed="resetForm">
     <el-scrollbar maxHeight="65vh">
       <el-form ref="providerForm" :model="form" :rules="rules" labelPosition="top" :disabled="saving" class="customProviderForm">
+        <el-form-item v-if="!provider" label="一键预设模板">
+          <el-select
+            v-model="selectedPresetId"
+            clearable
+            placeholder="选择推荐供应商预设（选后仅需填写 API 密钥）"
+            aria-label="一键预设模板"
+            @change="applyPreset">
+            <el-option
+              v-for="preset in presetLanguageProviders"
+              :key="preset.id"
+              :label="preset.label"
+              :value="preset.id" />
+          </el-select>
+        </el-form-item>
         <div class="formGrid">
           <el-form-item label="Provider ID" prop="id"><el-input v-model="form.id" placeholder="例如 myProvider" /></el-form-item>
           <el-form-item label="显示名称" prop="label"><el-input v-model="form.label" placeholder="供应商的显示名称" /></el-form-item>
@@ -169,10 +183,12 @@ import {
 import { saveSettings, type CustomProvider, type CustomProviderModel } from "@/stores/settings";
 import { languageProviders } from "@toonflow/providers";
 import { thinkingLevels, type ThinkingLevel, type ReasoningEfforts } from "@toonflow/server/modelReasoning";
+import { presetLanguageProviders } from "./presetLanguageProviders";
 
 const props = defineProps<{ provider?: CustomProvider }>();
 const visible = defineModel<boolean>({ default: false });
 const providerForm = ref<FormInstance>();
+const selectedPresetId = ref("");
 const form = reactive({ id: "", label: "", apiUrl: "", protocol: "openai-completions", apiKey: "", headers: [] as { key: string; name: string; value: string }[] });
 const models = ref<(CustomProviderModel & { key: string })[]>([]);
 const expandedModels = ref(new Set<string>());
@@ -257,6 +273,7 @@ watch([() => form.id, () => form.apiUrl, () => form.protocol, () => form.apiKey]
 watch(() => form.headers, () => request?.abort(), { deep: true });
 
 function resetForm() {
+  selectedPresetId.value = "";
   Object.assign(form, { id: "", label: "", apiUrl: "", protocol: "openai-completions", apiKey: "" });
   form.headers = [];
   models.value = [];
@@ -265,6 +282,21 @@ function resetForm() {
   selectedIds.value = new Set();
   modelSearch.value = "";
   formError.value = "";
+}
+
+function applyPreset(presetId: string) {
+  const preset = presetLanguageProviders.find(item => item.id === presetId);
+  if (!preset) return;
+  Object.assign(form, {
+    id: preset.id,
+    label: preset.label,
+    apiUrl: preset.apiUrl,
+    protocol: preset.protocol,
+  });
+  models.value = preset.models.map(item => ({ ...item, key: crypto.randomUUID() }));
+  expandedModels.value = new Set();
+  formError.value = "";
+  providerForm.value?.clearValidate(["id", "label", "apiUrl", "protocol"]);
 }
 
 function addRequestHeader() {

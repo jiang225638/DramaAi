@@ -18,7 +18,9 @@ const installerName = `${desktopConfig.app.name}-${desktopConfig.app.version}${p
 const outputFile = join(artifactDir, installerName);
 const installerDir = resolve("apps/desktop/installer");
 const appIcon = resolve("packages/assets/logo.ico");
-const makensis = process.env.NSIS_PATH ?? "C:/Program Files (x86)/NSIS/makensis.exe";
+const defaultMakensis = "C:/Program Files (x86)/NSIS/makensis.exe";
+const portableMakensis = join(nsisDir, "tools/nsis-3.10/makensis.exe");
+const makensis = process.env.NSIS_PATH ?? (existsSync(defaultMakensis) ? defaultMakensis : portableMakensis);
 const csc = join(process.env.WINDIR!, "Microsoft.NET/Framework64/v4.0.30319/csc.exe");
 const helperPlatform = `/platform:${process.arch === "arm64" ? "anycpu" : "x64"}`;
 const webViewDir = join(nsisDir, "webview2");
@@ -177,6 +179,17 @@ foreach ($path in @(${helpers.map(name => quotePowerShell(join(stagingDir, name)
   const signingArgs = process.env.windowsSigningThumbprint?.trim()
     ? [`/DwindowsSignCommand="${process.execPath}" "${join(import.meta.dirname, "signWindows.ts")}"`]
     : [];
+  if (!existsSync(makensis)) {
+    const nsisToolDir = join(nsisDir, "tools");
+    mkdirSync(nsisToolDir, { recursive: true });
+    const nsisZip = join(nsisToolDir, "nsis.zip");
+    try {
+      await $`curl.exe --fail --location --max-time 120 --output ${nsisZip} https://downloads.sourceforge.net/project/nsis/NSIS%203/3.10/nsis-3.10.zip`;
+      await $`tar.exe -xf ${nsisZip} -C ${nsisToolDir}`;
+    } finally {
+      rmSync(nsisZip, { force: true });
+    }
+  }
   await $`${makensis} /INPUTCHARSET UTF8 ${signingArgs} /DwebView2Dir=${webViewDir} /DrunningChecker=${runningChecker} /DupdateHelper=${updateHelper} /DruntimeDownloader=${runtimeDownloader} /DappIcon=${appIcon} /DappVersion=${
     desktopConfig.app.version
   } /DappArch=${process.arch} /DappIdentifier=${desktopConfig.app.identifier} /DappTar=${installerTar} /DappHash=${manifest.hash} /DoutputFile=${stagedOutputFile} /DinitializeInstallScript=${initializeInstallScript} ${join(installerDir, "installer.nsi")}`;
