@@ -6,7 +6,6 @@ import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/lib/middleware";
 
 const router = Router();
-const defaultLicenseServer = process.env.DRAMAAI_LICENSE_SERVER || "https://license.dramaai.top";
 
 export default router.post(
   "/",
@@ -19,7 +18,7 @@ export default router.post(
       return res.status(400).json(error("本地未找到已激活的卡密"));
     }
 
-    const serverUrl = (typeof req.body.serverUrl === "string" && req.body.serverUrl.trim()) || defaultLicenseServer;
+    const serverUrl = (typeof req.body.serverUrl === "string" && req.body.serverUrl.trim()) || u.license.defaultLicenseServer;
     const machineId = u.license.getMachineId();
 
     try {

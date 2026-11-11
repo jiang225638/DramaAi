@@ -1,6 +1,7 @@
 import { execSync } from "node:child_process";
-import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import { createHash, randomUUID } from "node:crypto";
+import { resolve } from "node:path";
+import { existsSync, mkdirSync, readFileSync, writeAtomicSync } from "@toonflow/file";
 
 let cachedMachineId: string | null = null;
 
@@ -17,7 +18,7 @@ function getRawPlatformId(): string {
         return match[1].trim();
       }
     } catch {
-      // 备用兜底逻辑
+      // 继续尝试兜底
     }
   } else if (process.platform === "darwin") {
     try {
@@ -30,7 +31,7 @@ function getRawPlatformId(): string {
         return match[1].trim();
       }
     } catch {
-      // 备用兜底逻辑
+      // 继续尝试兜底
     }
   } else if (process.platform === "linux") {
     for (const path of ["/etc/machine-id", "/var/lib/dbus/machine-id"]) {
@@ -39,15 +40,27 @@ function getRawPlatformId(): string {
           const content = readFileSync(path, "utf-8").trim();
           if (content) return content;
         } catch {
-          // 继续尝试
+          // 沙盒环境下无权限读取系统 machine-id，转入持久化 UUID
         }
       }
     }
   }
 
-  // 极端异常环境兜底：使用用户主目录与环境名
-  const fallback = `${process.env.USER ?? ""}-${process.env.USERNAME ?? ""}-${process.env.COMPUTERNAME ?? "host"}`;
-  return fallback;
+  // Android 等沙盒环境无法读取底层硬件 ID 时，在应用私有数据目录持久化唯一设备 UUID
+  try {
+    const dataDir = process.env.TOONFLOW_DATA_DIR ?? resolve(import.meta.dirname, "../../../../../data");
+    mkdirSync(dataDir, { recursive: true });
+    const uuidFile = resolve(dataDir, ".device_uuid");
+    if (existsSync(uuidFile)) {
+      const saved = readFileSync(uuidFile, "utf-8").trim();
+      if (saved) return saved;
+    }
+    const generated = randomUUID();
+    writeAtomicSync(uuidFile, generated);
+    return generated;
+  } catch {
+    return `${process.env.USER ?? ""}-${process.env.USERNAME ?? ""}-${process.env.COMPUTERNAME ?? "host"}`;
+  }
 }
 
 export function getMachineId(): string {

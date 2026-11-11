@@ -4,7 +4,7 @@
     title="DramaAI 软件激活"
     width="min(500px, 92vw)"
     alignCenter
-    append-to-body
+    appendToBody
     :closeOnClickModal="false"
     :closeOnPressEscape="false"
     :showClose="false"

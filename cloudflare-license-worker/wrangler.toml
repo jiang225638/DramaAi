@@ -2,12 +2,12 @@ name = "dramaai-license-worker"
 main = "src/index.ts"
 compatibility_date = "2024-09-23"
 
+routes = [
+  { pattern = "license.explorlove.online", custom_domain = true }
+]
+
 # D1 数据库绑定
 [[d1_databases]]
 binding = "DB"
 database_name = "dramaai-license-db"
 database_id = "cb0cb212-9964-4b77-a208-21248c1be3db"
-
-[vars]
-ED25519_PRIVATE_KEY = "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEICn9pi1YMQ78R7rejbPJ3KEugaFSkcFGyRIgSk7AvVSJ\n-----END PRIVATE KEY-----"
-ADMIN_SECRET = "dramaai_admin_8f9a2c1d7e3b"

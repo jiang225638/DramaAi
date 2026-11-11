@@ -1,13 +1,15 @@
 import type { Request, Response, NextFunction } from "express";
 import { getLicenseStatus } from "./verifier";
 
-// 拦截需要授权的敏感/核心创作路径
+// 仅拦截核心 AI 生成、对话与合成接口，放行初始化、设置读取及模型列表查询接口
 const protectedPrefixes = [
-  "/api/ai",
-  "/api/media/generate",
-  "/api/media/debug",
-  "/api/singleAgent",
-  "/api/providers/models",
+  "/api/ai/generate",
+  "/api/ai/media/generate",
+  "/api/agent/create",
+  "/api/agent/message",
+  "/api/singleAgent/create",
+  "/api/singleAgent/run",
+  "/api/ffmpeg",
 ];
 
 export function licenseGuardMiddleware(req: Request, res: Response, next: NextFunction): void {

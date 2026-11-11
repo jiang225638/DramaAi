@@ -5,7 +5,6 @@ import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/lib/middleware";
 
 const router = Router();
-const defaultLicenseServer = process.env.DRAMAAI_LICENSE_SERVER || "https://license.dramaai.top";
 
 export default router.post(
   "/",
@@ -26,7 +25,7 @@ export default router.post(
       return res.json(success({ message: "已清除本地激活信息" }));
     }
 
-    const serverUrl = (typeof req.body.serverUrl === "string" && req.body.serverUrl.trim()) || defaultLicenseServer;
+    const serverUrl = (typeof req.body.serverUrl === "string" && req.body.serverUrl.trim()) || u.license.defaultLicenseServer;
     const machineId = u.license.getMachineId();
 
     try {

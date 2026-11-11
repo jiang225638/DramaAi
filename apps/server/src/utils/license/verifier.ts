@@ -3,6 +3,8 @@ import { resolve } from "node:path";
 import { verify } from "node:crypto";
 import { getMachineId } from "./machineId";
 
+export const defaultLicenseServer = process.env.DRAMAAI_LICENSE_SERVER || "https://license.explorlove.online";
+
 export const ED25519_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MCowBQYDK2VwAyEA5JB5U3hB+cbap8k+jBZyhP/9rZe8TvgZoLe35ZPaP08=
 -----END PUBLIC KEY-----`;

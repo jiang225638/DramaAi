@@ -17,6 +17,16 @@ export const licenseLoading = ref(false);
 export const licenseError = ref("");
 export const guardDialogVisible = ref(false);
 
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    if (axios.isAxiosError(error) && error.response?.status === 402) {
+      guardDialogVisible.value = true;
+    }
+    return Promise.reject(error);
+  },
+);
+
 export async function fetchLicenseStatus(): Promise<LicenseStatus | null> {
   licenseLoading.value = true;
   licenseError.value = "";
@@ -28,6 +38,9 @@ export async function fetchLicenseStatus(): Promise<LicenseStatus | null> {
       licenseStatus.value = data.data;
       if (!data.data.isActivated) {
         guardDialogVisible.value = true;
+      } else {
+        // 已激活且有网时，后台静默刷新续期
+        void verifyLicense();
       }
       return data.data;
     }

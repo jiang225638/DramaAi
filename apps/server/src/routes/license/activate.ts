@@ -7,7 +7,6 @@ import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/lib/middleware";
 
 const router = Router();
-const defaultLicenseServer = process.env.DRAMAAI_LICENSE_SERVER || "https://license.dramaai.top";
 
 export default router.post(
   "/",
@@ -19,7 +18,7 @@ export default router.post(
   async (req, res) => {
     const cardKey = typeof req.body.cardKey === "string" ? req.body.cardKey.trim() : "";
     const directToken = typeof req.body.token === "string" ? req.body.token.trim() : "";
-    const serverUrl = (typeof req.body.serverUrl === "string" && req.body.serverUrl.trim()) || defaultLicenseServer;
+    const serverUrl = (typeof req.body.serverUrl === "string" && req.body.serverUrl.trim()) || u.license.defaultLicenseServer;
     const machineId = u.license.getMachineId();
 
     if (directToken) {
