@@ -117,7 +117,6 @@
     "apps/web/src/components/agent/menu.vue",
     "apps/web/src/components/agent/nodeToolsDialog.vue",
     "apps/web/src/components/desktopQuit.vue",
-    "apps/web/src/components/license/licenseSettingsPanel.vue",
     "apps/web/src/components/settings/panels/account/forgotPasswordDialog.vue",
     "apps/web/src/components/settings/panels/account/subAccounts.vue",
     "apps/web/src/components/settings/panels/developer/index.vue",
@@ -423,8 +422,6 @@
   ],
   "已复制": [
     "apps/web/src/components/agent/conversation.vue",
-    "apps/web/src/components/license/licenseGuardDialog.vue",
-    "apps/web/src/components/license/licenseSettingsPanel.vue",
     "apps/web/src/components/settings/panels/deviceLink/index.vue",
     "apps/web/src/lib/i18n.ts"
   ],
@@ -1063,102 +1060,6 @@
     "apps/web/src/components/languageSelect.vue",
     "apps/web/src/components/settings/panels/general/ui.vue"
   ],
-  "DramaAI 软件激活": [
-    "apps/web/src/components/license/licenseGuardDialog.vue"
-  ],
-  "欢迎使用 DramaAI": [
-    "apps/web/src/components/license/licenseGuardDialog.vue"
-  ],
-  "请输入您购买的软件授权卡密以解锁完整功能": [
-    "apps/web/src/components/license/licenseGuardDialog.vue"
-  ],
-  "本机硬件识别码 (Machine ID)": [
-    "apps/web/src/components/license/licenseGuardDialog.vue"
-  ],
-  "复制": [
-    "apps/web/src/components/license/licenseGuardDialog.vue",
-    "apps/web/src/components/license/licenseSettingsPanel.vue",
-    "apps/web/src/components/settings/panels/deviceLink/index.vue",
-    "apps/web/src/components/settings/panels/mcp/index.vue",
-    "apps/web/src/lib/i18n.ts",
-    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
-    "apps/desktop/src/index.ts"
-  ],
-  "授权卡密 (License Key)": [
-    "apps/web/src/components/license/licenseGuardDialog.vue"
-  ],
-  "例如: DRAMA-LIFE-8F9A-2C1D-7E3B": [
-    "apps/web/src/components/license/licenseGuardDialog.vue"
-  ],
-  "尚未购买授权？请前往发卡平台或联系官方客服获取卡密。": [
-    "apps/web/src/components/license/licenseGuardDialog.vue"
-  ],
-  "立即激活并进入": [
-    "apps/web/src/components/license/licenseGuardDialog.vue"
-  ],
-  "已复制本机机器码": [
-    "apps/web/src/components/license/licenseGuardDialog.vue",
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "软件激活成功！欢迎使用 DramaAI": [
-    "apps/web/src/components/license/licenseGuardDialog.vue"
-  ],
-  "激活失败，请检查卡密输入是否正确": [
-    "apps/web/src/components/license/licenseGuardDialog.vue"
-  ],
-  "软件授权与激活": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "DramaAI 采用独立卡密买断/周期授权，数据与算力 100% 留在本地。": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "当前授权状态": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "已激活": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "未激活": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "授权版本": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "绑定卡密": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "到期时间": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue",
-    "apps/web/src/components/settings/panels/account/subAccounts.vue"
-  ],
-  "本机硬件码": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "刷新授权状态": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "确定要解绑本机吗？解绑后将释放设备名额，本机需要重新输入卡密才能使用。": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "确定解绑": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "解绑当前电脑": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "授权状态刷新成功": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "刷新失败，请检查网络连接": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "解绑成功，当前电脑已恢复未激活状态": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue"
-  ],
-  "解绑失败": [
-    "apps/web/src/components/license/licenseSettingsPanel.vue",
-    "apps/web/src/stores/license.ts"
-  ],
   "正在加载项目": [
     "apps/web/src/components/loadingPage.vue"
   ],
@@ -1421,9 +1322,6 @@
     "apps/web/src/components/settings/index.vue"
   ],
   "通用设置": [
-    "apps/web/src/components/settings/index.vue"
-  ],
-  "软件授权": [
     "apps/web/src/components/settings/index.vue"
   ],
   "文本模型": [
@@ -2088,6 +1986,9 @@
     "apps/web/src/components/settings/panels/account/subAccounts.vue"
   ],
   "有效期设置": [
+    "apps/web/src/components/settings/panels/account/subAccounts.vue"
+  ],
+  "到期时间": [
     "apps/web/src/components/settings/panels/account/subAccounts.vue"
   ],
   "请选择到期时间": [
@@ -2879,6 +2780,13 @@
   ],
   "复制地址": [
     "apps/web/src/components/settings/panels/deviceLink/index.vue"
+  ],
+  "复制": [
+    "apps/web/src/components/settings/panels/deviceLink/index.vue",
+    "apps/web/src/components/settings/panels/mcp/index.vue",
+    "apps/web/src/lib/i18n.ts",
+    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
+    "apps/desktop/src/index.ts"
   ],
   "复制配对码": [
     "apps/web/src/components/settings/panels/deviceLink/index.vue"
@@ -7937,9 +7845,6 @@
   "请在桌面客户端中检查更新。": [
     "apps/web/src/stores/desktopUpdate.ts"
   ],
-  "激活失败": [
-    "apps/web/src/stores/license.ts"
-  ],
   "安装账号供应商失败": [
     "apps/web/src/stores/settings.ts"
   ],
@@ -8811,42 +8716,6 @@
   "FFmpeg 请求已在执行": [
     "apps/server/src/routes/ffmpeg/execute.ts"
   ],
-  "离线凭证无效": [
-    "apps/server/src/routes/license/activate.ts"
-  ],
-  "请提供卡密进行激活": [
-    "apps/server/src/routes/license/activate.ts"
-  ],
-  "激活失败，请检查卡密": [
-    "apps/server/src/routes/license/activate.ts"
-  ],
-  "连接激活服务器失败，请检查网络设置": [
-    "apps/server/src/routes/license/activate.ts"
-  ],
-  "本地已处于未激活状态": [
-    "apps/server/src/routes/license/deactivate.ts"
-  ],
-  "已清除本地激活信息": [
-    "apps/server/src/routes/license/deactivate.ts"
-  ],
-  "解绑失败，请重试": [
-    "apps/server/src/routes/license/deactivate.ts"
-  ],
-  "解绑成功，设备名额已释放": [
-    "apps/server/src/routes/license/deactivate.ts"
-  ],
-  "连接解绑服务器失败": [
-    "apps/server/src/routes/license/deactivate.ts"
-  ],
-  "本地未找到已激活的卡密": [
-    "apps/server/src/routes/license/verify.ts"
-  ],
-  "续签校验失败": [
-    "apps/server/src/routes/license/verify.ts"
-  ],
-  "连接验证服务器失败": [
-    "apps/server/src/routes/license/verify.ts"
-  ],
   "请在桌面端或服务器本机导入 MCP": [
     "apps/server/src/routes/mcp/servers/importDxt.ts",
     "apps/server/src/routes/mcp/servers/inspectDxt.ts"
@@ -9666,36 +9535,6 @@
   "暂不支持自动下载 {0} 版本": [
     "apps/server/src/utils/ffmpeg/index.ts",
     "packages/ffmpeg/src/index.ts"
-  ],
-  "软件尚未激活或授权已失效，请先激活": [
-    "apps/server/src/utils/license/middleware.ts"
-  ],
-  "授权凭证格式损坏": [
-    "apps/server/src/utils/license/verifier.ts"
-  ],
-  "授权签名无效或被篡改": [
-    "apps/server/src/utils/license/verifier.ts"
-  ],
-  "当前设备与授权绑定设备不一致": [
-    "apps/server/src/utils/license/verifier.ts"
-  ],
-  "卡密授权已过期": [
-    "apps/server/src/utils/license/verifier.ts"
-  ],
-  "离线免验证已达上限，请连接网络刷新授权": [
-    "apps/server/src/utils/license/verifier.ts"
-  ],
-  "解析授权凭证失败": [
-    "apps/server/src/utils/license/verifier.ts"
-  ],
-  "软件尚未激活": [
-    "apps/server/src/utils/license/verifier.ts"
-  ],
-  "检测到系统时间发生异常回拨，请修正系统时钟后联网重试": [
-    "apps/server/src/utils/license/verifier.ts"
-  ],
-  "授权凭证已失效": [
-    "apps/server/src/utils/license/verifier.ts"
   ],
   "只允许 DramaAI 页面访问控制连接": [
     "apps/server/src/utils/mcp/control.ts"

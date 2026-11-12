@@ -117,8 +117,6 @@ export async function createApp({
   app.use(express.json({ limit: "100mb" }));
   app.use(express.urlencoded({ extended: true, limit: "100mb" }));
   app.use("/api/desktop", desktopRequest);
-  const { licenseGuardMiddleware } = await import("@/utils/license/middleware");
-  app.use(licenseGuardMiddleware);
 
   const router = await import("@/router");
   router.default(app);

@@ -7,7 +7,6 @@
         </transition>
       </router-view>
       <loadingPage v-model:visible="workspaceStore.projectLoadingVisible" v-model:drawn="workspaceStore.projectLoadingDrawn" :active="workspaceStore.projectLoading" />
-      <licenseGuardDialog />
       <ffmpegRequired v-if="currentUser?.role !== 'user'" />
       <desktopTitlebar v-if="isDesktop && isWindows" />
       <desktopQuit v-if="actualPlatform.isDesktop" />
@@ -69,14 +68,9 @@ import ffmpegRequired from "@/components/settings/ffmpegRequired.vue";
 import desktopQuit from "@/components/desktopQuit.vue";
 import desktopTitlebar from "@/components/desktopTitlebar.vue";
 import updateBox from "@/components/updateBox.vue";
-import licenseGuardDialog from "@/components/license/licenseGuardDialog.vue";
-import { fetchLicenseStatus } from "@/stores/license";
 import "element-plus/theme-chalk/dark/css-vars.css";
 
-if (currentUser.value?.role !== "user") {
-  useMcpControl();
-  void fetchLicenseStatus();
-}
+if (currentUser.value?.role !== "user") useMcpControl();
 const workspaceStore = useWorkspaceStore();
 
 // ACT: TDesign 缺少的语言使用英语基底，聊天控件由应用字典补齐。

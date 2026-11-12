@@ -37,7 +37,6 @@ import * as mentionFiles from "@/agent/mentionFiles";
 import * as network from "@/utils/network";
 import * as channel from "@/utils/channel";
 import * as multiTenant from "@/utils/multiTenant";
-import * as license from "@/utils/license";
 
 export default {
   assets,
@@ -81,5 +80,4 @@ export default {
   network,
   channel,
   multiTenant,
-  license,
 };

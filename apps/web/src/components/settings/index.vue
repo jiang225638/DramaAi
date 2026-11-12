@@ -59,13 +59,11 @@ import {
   IconNetwork,
   IconUserCircle,
   IconUsersGroup,
-  IconKey,
 } from "@tabler/icons-vue";
 
 const allSettingsPanels = [
   { id: "account", label: "账号与余额", icon: IconUserCircle, component: defineAsyncComponent(() => import("./panels/account/index.vue")) },
   { id: "general", label: "通用设置", icon: IconSettings, component: defineAsyncComponent(() => import("./panels/general/index.vue")) },
-  { id: "license", label: "软件授权", icon: IconKey, component: defineAsyncComponent(() => import("@/components/license/licenseSettingsPanel.vue")) },
   {
     id: "languageModel",
     label: "文本模型",
@@ -102,7 +100,7 @@ const settingsPanels = computed(() => allSettingsPanels.filter(item => {
   if (item.id === "deviceLink") return false;
   if (!publicWeb.value && ["account", "multiTenant"].includes(item.id)) return false;
   if (publicWeb.value && currentUser.value?.role === "user") return ["account", "general", "about"].includes(item.id);
-  if (publicWeb.value && ["multiTenant", "deviceLink", "network", "mcp", "developer", "pluginMarket", "license"].includes(item.id)) return false;
+  if (publicWeb.value && ["multiTenant", "deviceLink", "network", "mcp", "developer", "pluginMarket"].includes(item.id)) return false;
   return !multiTenantEnabled.value || !["languageModel", "mediaModel", "developer"].includes(item.id);
 }).map(item => publicWeb.value && item.id === "account" ? publicAccountPanel : item));
 const activePanel = shallowRef(settingsPanels.value[0]!);
